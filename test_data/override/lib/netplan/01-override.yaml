@@ -1,0 +1,8 @@
+network:
+  version: 2
+  ethernets:
+    eno1:
+      match:
+        macaddress: 00:25:90:a6:8a:37
+      set-name: eno1
+      mtu: 1500

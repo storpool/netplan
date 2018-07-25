@@ -1,0 +1,5 @@
+network:
+  ethernets:
+    enp2s0: {mtu: 9000}
+    enp2s0.617: {mtu: 9000}
+  version: 2

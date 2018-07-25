@@ -1,0 +1,42 @@
+network:
+  version: 2
+  ethernets:
+    eno1:
+      match:
+        macaddress: 00:25:90:a6:8a:37
+      set-name: eno1
+      mtu: 1500
+    enp2s0:
+      match:
+        macaddress: f4:52:14:76:9c:e0
+      set-name: enp2s0
+      mtu: 9000
+    enp2s0d1:
+      match:
+        macaddress: f4:52:14:76:9c:e1
+      set-name: enp2s0d1
+      mtu: 1500
+    enp4s0:
+      match:
+        macaddress: 00:25:90:a6:8a:36
+      set-name: enp4s0
+      mtu: 1500
+  bridges:
+    br-enp4s0:
+      interfaces: [enp4s0]
+      addresses:
+      - 10.1.66.27/24
+      gateway4: 10.1.66.10
+      nameservers:
+        search: [maas]
+        addresses: [10.1.8.10]
+      mtu: 1500
+  vlans:
+    enp2s0.617:
+      id: 617
+      link: enp2s0
+      addresses:
+      - 10.1.67.27/24
+      nameservers:
+        search: [maas]
+        addresses: [10.1.8.10]

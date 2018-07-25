@@ -1,0 +1,86 @@
+# Copyright (c) 2018  StorPool.
+# All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+Convenience classes for the fully-parsed netplan configuration.
+"""
+
+import itertools
+
+from . import interface as npiface
+
+
+class NetPlan(object):
+    """
+    A full netplan configuration; the "data" member is a dictionary of
+    interface names to netplan.interface.* classes.
+    """
+    VERSION = '0.1.0.dev1'
+
+    def __init__(self, data):
+        self.data = data
+
+    def __str__(self):
+        """
+        Provide a human-readable list of the interfaces grouped by section.
+        """
+        # So...
+        # Group the interfaces by section, then sort the ones in
+        # each section and join them with a comma, then prepend
+        # the section name and join the sections with a semicolon.
+        # See also "magick, blacke".
+        return '; '.join(sorted(
+            map(lambda grp: '{name}: {ifs}'
+                            .format(name=grp[0],
+                                    ifs=', '.join(sorted(
+                                      [d.name for d in grp[1]]))),
+                itertools.groupby(sorted(self.data.values(),
+                                         key=lambda d: d.section),
+                                  lambda d: d.section))))
+
+    def __repr__(self):
+        """
+        Provide a Python-style representation.
+        """
+        return 'NetPlan({d})'.format(d=repr(self.data))
+
+    def get_all_interfaces(self, ifaces):
+        """
+        Get the configuration of the interfaces with the specified names and
+        all their parents recursively.
+        """
+        cur = set()
+        new = set(ifaces)
+        while new:
+            cur = cur.union(new)
+            newnew = set()
+            for iface in new:
+                newnew = newnew.union(
+                    set(self.data[iface].get_parent_names()) - cur)
+            new = newnew
+        return NetPlan({iface: self.data[iface] for iface in cur})
+
+    def get_physical_interfaces(self, ifaces):
+        """
+        Similar to get_all_interfaces(), but only return physical interfaces.
+        For instance, for a VLAN interface over a bridge over two VLANs
+        over Ethernet interfaces this function would only return
+        the definitions for the Ethernet interfaces.  For an Ethernet or
+        wireless interface this function would return its own configuration.
+        """
+        related = self.get_all_interfaces(ifaces)
+        phys = [d for d in related.data.values()
+                if isinstance(d, npiface.PhysicalInterface)]
+        return NetPlan({d.name: d for d in phys})

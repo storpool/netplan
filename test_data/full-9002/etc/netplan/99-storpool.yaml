@@ -1,0 +1,6 @@
+network:
+  ethernets:
+    enp2s0: {mtu: 9002}
+  version: 2
+  vlans:
+    enp2s0.617: {mtu: 9002}
