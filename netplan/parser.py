@@ -18,7 +18,6 @@ A parser for the netplan configuration.
 """
 
 
-import itertools
 import os
 import yaml
 
@@ -87,12 +86,16 @@ class Parser(object):
         # names that end in *.yaml, then let a file in a later
         # directory override one by the same name in an earlier one.
         #
-        files = dict(itertools.chain(
-            *map(lambda d: filter(lambda i: os.path.isfile(i[1]),
-                                  map(lambda f: (f, os.path.join(d, f)),
-                                      filter(lambda s: s.endswith('.yaml'),
-                                             os.listdir(d)))),
-                 filter(os.path.isdir, self.dirs))))
+        dirs = [dirname for dirname in self.dirs if os.path.isdir(dirname)]
+        files = {}
+        for dirname in dirs:
+            for fname in os.listdir(dirname):
+                if not fname.endswith('.yaml'):
+                    continue
+                full = os.path.join(dirname, fname)
+                if not os.path.isfile(full):
+                    continue
+                files[fname] = full
 
         # Now return the full paths sorted by their base name.
         return [files[name] for name in sorted(files.keys())]

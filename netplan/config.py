@@ -17,8 +17,6 @@
 Convenience classes for the fully-parsed netplan configuration.
 """
 
-import itertools
-
 from . import interface as npiface
 
 
@@ -36,19 +34,23 @@ class NetPlan(object):
         """
         Provide a human-readable list of the interfaces grouped by section.
         """
-        # So...
-        # Group the interfaces by section, then sort the ones in
-        # each section and join them with a comma, then prepend
-        # the section name and join the sections with a semicolon.
-        # See also "magick, blacke".
-        return '; '.join(sorted(
-            map(lambda grp: '{name}: {ifs}'
-                            .format(name=grp[0],
-                                    ifs=', '.join(sorted(
-                                      [d.name for d in grp[1]]))),
-                itertools.groupby(sorted(self.data.values(),
-                                         key=lambda d: d.section),
-                                  lambda d: d.section))))
+        # Group the interfaces by section
+        by_section = {}
+        for iface, cfg in self.data.items():
+            if cfg.section not in by_section:
+                by_section[cfg.section] = []
+            by_section[cfg.section].append(iface)
+
+        # Sort the interface names within each section
+        collected = [
+            '{sect}: {ifaces}'.format(
+                sect=section,
+                ifaces=', '.join(sorted(data)))
+            for (section, data) in by_section.items()
+        ]
+
+        # Return a list sorted by section name
+        return '; '.join(sorted(collected))
 
     def __repr__(self):
         """
