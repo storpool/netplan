@@ -1,0 +1,28 @@
+#!/usr/bin/make -f
+
+buildvers := $(shell pyversions -rv)
+build3vers := $(shell py3versions -rv)
+
+%:
+	dh "$@" --buildsystem=pybuild --with=python2,python3
+
+override_dh_auto_install:
+	dh_auto_install
+	
+	set -e; for i in $(buildvers); do \
+		python$$i ./setup.py install \
+			--install-layout=deb \
+			--root $(CURDIR)/debian/python-netplan; \
+	done
+	rm $(CURDIR)/debian/python-netplan/usr/bin/netplan-parser
+	
+	set -e; for i in $(build3vers); do \
+		python$$i ./setup.py install \
+			--install-layout=deb \
+			--root $(CURDIR)/debian/python3-netplan; \
+	done
+	rm $(CURDIR)/debian/python3-netplan/usr/bin/netplan-parser
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf netplan.egg-info

@@ -1,0 +1,5 @@
+netplan (0.1.0-1~0+sp1) UNRELEASED; urgency=low
+
+  * Initial release.
+
+ -- Peter Pentchev <pp@storpool.com>  Tue, 31 Jul 2018 11:32:01 +0300

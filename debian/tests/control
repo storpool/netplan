@@ -1,0 +1,7 @@
+Test-Command: set -e; mkdir testing; cd testing; ln -s ../test_data ./; ln -s ../unit_tests ./; mkdir bin; ln -s /usr/bin/netplan-parser bin/; python2 -m unittest discover -v
+Depends: @, python-ddt
+Restrictions: allow-stderr
+
+Test-Command: set -e; mkdir testing; cd testing; ln -s ../test_data ./; ln -s ../unit_tests ./; mkdir bin; ln -s /usr/bin/netplan-parser bin/; python3 -m unittest discover -v
+Depends: @, python3-ddt
+Restrictions: allow-stderr
