@@ -34,7 +34,7 @@ def run_parser(args):
     """
     env = {k: v for (k, v) in os.environ.items()}
     env['PYTHONPATH'] = ':'.join(sys.path)
-    cmd = [sys.executable, '--', 'bin/netplan-parser.py'] + args
+    cmd = [sys.executable, '--', 'bin/netplan-parser'] + args
     proc = subprocess.Popen(cmd, env=env,
                             stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     out = proc.communicate()
