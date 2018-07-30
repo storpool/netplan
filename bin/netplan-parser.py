@@ -131,6 +131,11 @@ def main():
     """
     Parse command-line options, run the query, output the results.
     """
+    cmds = {
+        'physical': cmd_physical,
+        'related': cmd_related,
+        'show': cmd_show,
+    }
     global FORMATTERS
     parser = argparse.ArgumentParser(
         prog='netplan-parser',
@@ -151,33 +156,20 @@ def main():
     parser.add_argument('--format', '-f',
                         choices=sorted(FORMATTERS.keys()),
                         help='specify the output format')
-    sub = parser.add_subparsers()
-
-    parser_show = sub.add_parser('show')
-    parser_show.add_argument('interfaces', type=str, nargs='*',
-                             help='only examine the specified interfaces')
-    parser_show.set_defaults(func=cmd_show)
-
-    parser_physical = sub.add_parser('physical')
-    parser_physical.add_argument('interfaces', type=str, nargs='+',
-                                 help='the interfaces to examine')
-    parser_physical.set_defaults(func=cmd_physical)
-
-    parser_related = sub.add_parser('related')
-    parser_related.add_argument('interfaces', type=str, nargs='+',
-                                help='the interfaces to examine')
-    parser_related.set_defaults(func=cmd_related)
+    parser.add_argument('command', type=str, nargs='?',
+                        choices=sorted(cmds.keys()))
+    parser.add_argument('interfaces', type=str, nargs='*',
+                        help='only show information about these interfaces')
 
     args = parser.parse_args()
     if args.version:
         version()
-        exit(0)
-
-    if args.features:
+    elif args.features:
         features()
-        exit(0)
-
-    args.func(args)
+    elif args.command is None:
+        exit('No command specified, try --help')
+    else:
+        cmds[args.command](args)
 
 
 main()

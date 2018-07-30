@@ -47,14 +47,27 @@ class TestCmdNetPlanParser(unittest.TestCase):
     """
     Test the netplan-parser command-line utility.
     """
-    def test_help(self):
+    @ddt.data(
+        ('--help',
+         '^usage:'),
+        ('--version',
+         '^netplan-parser [0-9a-z.]+\n$'),
+        ('--features',
+         '^Features:.* netplan-parser=[0-9a-z.]+( [^\n]+)?\n$'),
+    )
+    @ddt.unpack
+    def test_queries(self, option, regex):
         """
         Make sure `netplan-parser --help` exits with code 0 and outputs
         a string starting with "usage:".
+        Make sure `netplan-parser --version` exits with code 0 and outputs
+        a single line that somewhat resembles a version number.
+        Make sure `netplan-parser --features` exits with code 0 and outputs
+        a single line that somewhat resembles a list of features.
         """
-        (code, output) = run_parser(['--help'])
+        (code, output) = run_parser([option])
         self.assertEqual(code, 0)
-        self.assertRegexpMatches(output, '^usage:')
+        self.assertRegexpMatches(output, regex)
 
     @ddt.data(
         ('test_data/override',
