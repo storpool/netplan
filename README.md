@@ -4,9 +4,9 @@
 
 This module parses the YAML configuration files describing the system's
 network configuration in the format used by the netplan.io package.
-The main parser is the `netplan.parser.Parser` class (also exported as
-`netplan.Parser`); its `parse()` method returns a data structure of
-the `netplan.config.NetPlan` class (also exported as `netplan.NetPlan`).
+The main parser is the "netplan.parser.Parser" class (also exported as
+"netplan.Parser"); its "parse()" method returns a data structure of
+the "netplan.config.NetPlan" class (also exported as "netplan.NetPlan").
 
 ## Example usage
 
