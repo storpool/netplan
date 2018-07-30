@@ -24,6 +24,7 @@ from __future__ import print_function
 
 import argparse
 import json
+import os
 import yaml
 
 import netplan
@@ -48,7 +49,10 @@ def parse_args(args):
     only the interfaces specified on the command line.
     """
     try:
-        parser = netplan.Parser()
+        dirs = netplan.Parser.NETPLAN_DIRS
+        if args.root is not None:
+            dirs = [os.path.join(args.root, d.lstrip('/')) for d in dirs]
+        parser = netplan.Parser(dirs=dirs)
         data = parser.parse()
     except Exception as exc:
         exit('Could not parse the netplan data: {e}'.format(e=exc))
@@ -131,15 +135,17 @@ def main():
     parser = argparse.ArgumentParser(
         prog='netplan-parser',
         usage='''
-        netplan-parser [-f fmt] show [interface...]
-        netplan-parser [-f fmt] physical interface...
-        netplan-parser [-f fmt] related interface...
+        netplan-parser [-f fmt] [-r rootdir] show [interface...]
+        netplan-parser [-f fmt] [-r rootdir] physical interface...
+        netplan-parser [-f fmt] [-r rootdir] related interface...
         netplan-parser -V | -h | --help | --version
         netplan-parser --features''')
     parser.add_argument('-N', '--noop', action='store_true',
                         help='no-operation mode')
     parser.add_argument('-V', '--version', action='store_true',
                         help='display program version information and exit')
+    parser.add_argument('--root', '-r', type=str,
+                        help='specify the root directory to look under')
     parser.add_argument('--features', action='store_true',
                         help='display program feature information')
     parser.add_argument('--format', '-f',
