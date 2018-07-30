@@ -83,9 +83,9 @@ class TestCmdNetPlanParser(unittest.TestCase):
          'br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0'),
     )
     @ddt.unpack
-    def test_output(self, root, names):
+    def test_show(self, root, names):
         """
-        Test the actual output of the netplan-parser tool.
+        Test "netplan-parser show".
         """
         (code, output, errs) = run_parser(['-f', 'names', '-r', root,
                                            'show'])
@@ -106,6 +106,90 @@ class TestCmdNetPlanParser(unittest.TestCase):
 
         (code, output, errs) = run_parser(['-f', 'json', '-r', root,
                                            'show'])
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        data = json.loads(output)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(' '.join(sorted(data.keys())), names)
+
+    @ddt.data(
+        ('test_data/override',
+         'eno1',
+         'eno1'),
+        ('test_data/full-9000',
+         'br-enp4s0',
+         'br-enp4s0 enp4s0'),
+        ('test_data/full-9002',
+         'enp2s0.617 br-enp4s0',
+         'br-enp4s0 enp2s0 enp2s0.617 enp4s0'),
+    )
+    @ddt.unpack
+    def test_related(self, root, query, names):
+        """
+        Test "netplan-parser related".
+        """
+        query_split = query.split(' ')
+        (code, output, errs) = run_parser(['-f', 'names', '-r', root,
+                                           'related'] + query_split)
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        lines = output.split('\n')
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(lines[0], names)
+        self.assertEqual(lines[1], '')
+
+        (code, output, errs) = run_parser(['-f', 'yaml', '-r', root,
+                                           'related'] + query_split)
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        data = yaml.load(output)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(' '.join(sorted(data.keys())), names)
+
+        (code, output, errs) = run_parser(['-f', 'json', '-r', root,
+                                           'related'] + query_split)
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        data = json.loads(output)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(' '.join(sorted(data.keys())), names)
+
+    @ddt.data(
+        ('test_data/override',
+         'eno1',
+         'eno1'),
+        ('test_data/full-9000',
+         'br-enp4s0',
+         'enp4s0'),
+        ('test_data/full-9002',
+         'enp2s0.617 br-enp4s0',
+         'enp2s0 enp4s0'),
+    )
+    @ddt.unpack
+    def test_physical(self, root, query, names):
+        """
+        Test "netplan-parser physical".
+        """
+        query_split = query.split(' ')
+        (code, output, errs) = run_parser(['-f', 'names', '-r', root,
+                                           'physical'] + query_split)
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        lines = output.split('\n')
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(lines[0], names)
+        self.assertEqual(lines[1], '')
+
+        (code, output, errs) = run_parser(['-f', 'yaml', '-r', root,
+                                           'physical'] + query_split)
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        data = yaml.load(output)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(' '.join(sorted(data.keys())), names)
+
+        (code, output, errs) = run_parser(['-f', 'json', '-r', root,
+                                           'physical'] + query_split)
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
         data = json.loads(output)
