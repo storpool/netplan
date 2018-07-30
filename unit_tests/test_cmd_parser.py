@@ -36,10 +36,14 @@ def run_parser(args):
     env['PYTHONPATH'] = ':'.join(sys.path)
     cmd = [sys.executable, '--', 'bin/netplan-parser'] + args
     proc = subprocess.Popen(cmd, env=env,
-                            stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
     out = proc.communicate()
     res = proc.wait()
-    return (res, out[0].decode(encoding='US-ASCII'))
+    return (res,
+            out[0].decode(encoding='US-ASCII'),
+            out[1].decode(encoding='utf-8'))
 
 
 @ddt.ddt
@@ -65,7 +69,8 @@ class TestCmdNetPlanParser(unittest.TestCase):
         Make sure `netplan-parser --features` exits with code 0 and outputs
         a single line that somewhat resembles a list of features.
         """
-        (code, output) = run_parser([option])
+        (code, output, errs) = run_parser([option])
+        self.assertEqual(errs, '')
         self.assertEqual(code, 0)
         self.assertRegexpMatches(output, regex)
 
@@ -82,23 +87,26 @@ class TestCmdNetPlanParser(unittest.TestCase):
         """
         Test the actual output of the netplan-parser tool.
         """
-        (code, output) = run_parser(['-f', 'names', '-r', root,
-                                     'show'])
+        (code, output, errs) = run_parser(['-f', 'names', '-r', root,
+                                           'show'])
+        self.assertEqual(errs, '')
         self.assertEqual(code, 0)
         lines = output.split('\n')
         self.assertEqual(len(lines), 2)
         self.assertEqual(lines[0], names)
         self.assertEqual(lines[1], '')
 
-        (code, output) = run_parser(['-f', 'yaml', '-r', root,
-                                     'show'])
+        (code, output, errs) = run_parser(['-f', 'yaml', '-r', root,
+                                           'show'])
+        self.assertEqual(errs, '')
         self.assertEqual(code, 0)
         data = yaml.load(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(' '.join(sorted(data.keys())), names)
 
-        (code, output) = run_parser(['-f', 'json', '-r', root,
-                                     'show'])
+        (code, output, errs) = run_parser(['-f', 'json', '-r', root,
+                                           'show'])
+        self.assertEqual(errs, '')
         self.assertEqual(code, 0)
         data = json.loads(output)
         self.assertIsInstance(data, dict)
