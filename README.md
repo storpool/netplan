@@ -47,3 +47,11 @@ available via the command-line `netplan-parser` tool:
     # Show the configuration of the physical interfaces related to
     # the specified ones
     netplan-parser --format=json physical eno2.617 br1-eno1
+
+## Contact
+
+The `netplan` Python library was written by Peter Pentchev as part of
+the [OpenStack development][openstack-dev] team at [StorPool][storpool].
+
+[openstack-dev]: mailto:openstack-dev@storpool.com
+[storpool]: https://storpool.com/
