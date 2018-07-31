@@ -53,7 +53,7 @@ def parse_args(args):
         if args.root is not None:
             dirs = [os.path.join(args.root, d.lstrip('/')) for d in dirs]
         parser = netplan.Parser(dirs=dirs)
-        data = parser.parse()
+        data = parser.parse(exclude=args.exclude)
     except Exception as exc:
         exit('Could not parse the netplan data: {e}'.format(e=exc))
 
@@ -140,9 +140,9 @@ def main():
     parser = argparse.ArgumentParser(
         prog='netplan-parser',
         usage='''
-        netplan-parser [-f fmt] [-r rootdir] show [interface...]
-        netplan-parser [-f fmt] [-r rootdir] physical interface...
-        netplan-parser [-f fmt] [-r rootdir] related interface...
+        netplan-parser [-f fmt] [-r rootdir] [-x fname] show [interface...]
+        netplan-parser [-f fmt] [-r rootdir] [-x fname] physical interface...
+        netplan-parser [-f fmt] [-r rootdir] [-x fname] related interface...
         netplan-parser -V | -h | --help | --version
         netplan-parser --features''')
     parser.add_argument('-N', '--noop', action='store_true',
@@ -156,6 +156,11 @@ def main():
     parser.add_argument('--format', '-f',
                         choices=sorted(FORMATTERS.keys()),
                         help='specify the output format')
+    parser.add_argument('--exclude', '-x', type=str, action='append',
+                        metavar='FILENAME',
+                        help='do not parse files with the specified name in '
+                        'any of the configuration directories '
+                        '(may be specified more than once)')
     parser.add_argument('command', type=str, nargs='?',
                         choices=sorted(cmds.keys()))
     parser.add_argument('interfaces', type=str, nargs='*',

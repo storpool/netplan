@@ -195,3 +195,28 @@ class TestCmdNetPlanParser(unittest.TestCase):
         data = json.loads(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(' '.join(sorted(data.keys())), names)
+
+    def test_exclude(self):
+        """
+        Test "netplan-parser -x conffile show".
+        """
+        (code, output, errs) = run_parser(['-f', 'yaml',
+                                           '-r', 'test_data/full-9002',
+                                           'show', 'enp2s0'])
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        data = yaml.load(output)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(list(data.keys()), ['enp2s0'])
+        self.assertEqual(data['enp2s0'].get('mtu', 1500), 9002)
+
+        (code, output, errs) = run_parser(['-f', 'yaml',
+                                           '-r', 'test_data/full-9002',
+                                           '-x', '99-storpool.yaml',
+                                           'show', 'enp2s0'])
+        self.assertEqual(errs, '')
+        self.assertEqual(code, 0)
+        data = yaml.load(output)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(list(data.keys()), ['enp2s0'])
+        self.assertEqual(data['enp2s0'].get('mtu', 1500), 9000)
