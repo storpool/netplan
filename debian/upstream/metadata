@@ -1,0 +1,6 @@
+Name: netplan
+Bug-Submit: mailto:openstack-dev@storpool.com
+Contact: StorPool OpenStack development <openstack-dev@storpool.com>
+Security-Contact: StorPool OpenStack development <openstack-dev@storpool.com>
+Repository: https://github.com/storpool/netplan.git
+Repository-Browse: https://github.com/storpool/netplan
