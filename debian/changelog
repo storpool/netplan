@@ -1,3 +1,9 @@
+netplan (0.2.0-1~0+sp1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Peter Pentchev <pp@storpool.com>  Tue, 31 Jul 2018 16:32:04 +0300
+
 netplan (0.1.0-1~0+sp1) unstable; urgency=low
 
   * Initial release.
