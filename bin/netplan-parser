@@ -30,7 +30,7 @@ import yaml
 import netplan
 
 
-VERSION_STRING = '0.1.0.dev1'
+VERSION_STRING = netplan.VERSION
 
 
 def version():
