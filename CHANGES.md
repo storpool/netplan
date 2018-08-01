@@ -1,6 +1,6 @@
 # Change log for netplan
 
-## Version 0.2.1 (not yet)
+## Version 0.3.0 (2018-08-01)
 
 - update the package metadata in setup.py
 

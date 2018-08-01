@@ -25,7 +25,7 @@ class NetPlan(object):
     A full netplan configuration; the "data" member is a dictionary of
     interface names to netplan.interface.* classes.
     """
-    VERSION = '0.2.1.dev1'
+    VERSION = '0.3.0'
 
     def __init__(self, data):
         self.data = data
