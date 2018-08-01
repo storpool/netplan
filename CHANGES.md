@@ -2,6 +2,8 @@
 
 ## Version 0.2.1 (not yet)
 
+- update the package metadata in setup.py
+
 ## Version 0.2.0 (2018-07-31)
 
 - add the "-x filename" argument to netplan-parser
