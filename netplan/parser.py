@@ -21,8 +21,13 @@ A parser for the netplan configuration.
 import os
 import yaml
 
+from typing import cast, Any, Dict, Iterable, List, Optional
+
 from . import config as npconfig
 from . import interface as npiface
+
+
+_TYPING_USED = (Any, Dict, Iterable, List, Optional)
 
 
 class ParseFileException(Exception):
@@ -30,6 +35,7 @@ class ParseFileException(Exception):
     An exception raised while parsing a NetPlan config file.
     """
     def __init__(self, fname, inner):
+        # type: (ParseFileException, str, Exception) -> None
         """
         Initialize a ParseFileException object with
         the specified filename and inner exception.
@@ -39,6 +45,7 @@ class ParseFileException(Exception):
         self.inner = inner
 
     def __str__(self):
+        # type: (ParseFileException) -> str
         """
         Provide a human-readable error message.
         """
@@ -46,6 +53,7 @@ class ParseFileException(Exception):
                .format(fname=self.fname, e=self.inner)
 
     def __repr__(self):
+        # type: (ParseFileException) -> str
         """
         Provide a Python-style representation.
         """
@@ -71,6 +79,7 @@ class Parser(object):
     }
 
     def __init__(self, dirs=NETPLAN_DIRS):
+        # type: (Parser, Iterable[str]) -> None
         """
         Initialize a Parser object, possibly overriding
         the list of directories to look in for netplan config files.
@@ -78,6 +87,7 @@ class Parser(object):
         self.dirs = dirs
 
     def find_files(self):
+        # type: (Parser) -> List[str]
         """
         Return a list of the full pathnames to the files that will be
         parsed for the netplan configuration.
@@ -101,6 +111,7 @@ class Parser(object):
         return [files[name] for name in sorted(files.keys())]
 
     def _combine_dicts(self, cur, new):
+        # type: (Parser, Dict[str, Any], Dict[str, Any]) -> None
         """
         Combine the "cur" and "new" dictionaries:
         - if an item is only in "new", add it to "cur"
@@ -120,6 +131,7 @@ class Parser(object):
                 cur[key] = value
 
     def _combine_files(self, files):
+        # type: (Parser, List[str]) -> Dict[str, npiface.Interface]
         """
         Read the netplan definitions from the specified files and, for
         each interface in them, create an object of the NetPlan*Interface
@@ -127,6 +139,7 @@ class Parser(object):
         defined in.
         """
         def parse_file(fname):
+            # type: (str) -> Dict[str, Any]
             """
             Parse a version 2 netplan file and return a dictionary
             containing the data about the interfaces.
@@ -149,9 +162,9 @@ class Parser(object):
             if missing:
                 raise Exception('Unsupported section(s) {ms}'
                                 .format(ms=', '.join(missing)))
-            return net
+            return cast(Dict[str, Any], net)
 
-        raw = {}
+        raw = {}  # type: Dict[str, Any]
         skeys = set(self.BY_SECTION.keys())
         for fname in files:
             try:
@@ -167,6 +180,7 @@ class Parser(object):
         return data
 
     def parse(self, exclude=None):
+        # type: (Parser, Optional[List[str]]) -> npconfig.NetPlan
         """
         Parse the netplan configuration files in the specified
         directories, possibly excluding certain files by name, and

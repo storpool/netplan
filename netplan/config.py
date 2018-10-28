@@ -17,7 +17,12 @@
 Convenience classes for the fully-parsed netplan configuration.
 """
 
+from typing import Dict, List, Set
+
 from . import interface as npiface
+
+
+_TYPING_USED = (Dict, List, Set)
 
 
 class NetPlan(object):
@@ -25,17 +30,19 @@ class NetPlan(object):
     A full netplan configuration; the "data" member is a dictionary of
     interface names to netplan.interface.* classes.
     """
-    VERSION = '0.3.0'
+    VERSION = '0.3.1.dev1'
 
     def __init__(self, data):
+        # type: (NetPlan, Dict[str, npiface.Interface]) -> None
         self.data = data
 
     def __str__(self):
+        # type: (NetPlan) -> str
         """
         Provide a human-readable list of the interfaces grouped by section.
         """
         # Group the interfaces by section
-        by_section = {}
+        by_section = {}  # type: Dict[str, List[str]]
         for iface, cfg in self.data.items():
             if cfg.section not in by_section:
                 by_section[cfg.section] = []
@@ -53,21 +60,23 @@ class NetPlan(object):
         return '; '.join(sorted(collected))
 
     def __repr__(self):
+        # type: (NetPlan) -> str
         """
         Provide a Python-style representation.
         """
         return 'NetPlan({d})'.format(d=repr(self.data))
 
     def get_all_interfaces(self, ifaces):
+        # type: (NetPlan, List[str]) -> NetPlan
         """
         Get the configuration of the interfaces with the specified names and
         all their parents recursively.
         """
-        cur = set()
+        cur = set()  # type: Set[str]
         new = set(ifaces)
         while new:
             cur = cur.union(new)
-            newnew = set()
+            newnew = set()  # type: Set[str]
             for iface in new:
                 newnew = newnew.union(
                     set(self.data[iface].get_parent_names()) - cur)
@@ -75,6 +84,7 @@ class NetPlan(object):
         return NetPlan({iface: self.data[iface] for iface in cur})
 
     def get_physical_interfaces(self, ifaces):
+        # type: (NetPlan, List[str]) -> NetPlan
         """
         Similar to get_all_interfaces(), but only return physical interfaces.
         For instance, for a VLAN interface over a bridge over two VLANs

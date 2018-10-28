@@ -18,37 +18,49 @@ Data structures describing the netplan interface definitions.
 """
 
 
+from typing import cast, Any, Dict, List, Optional
+
+
+_TYPING_USED = (Any, Dict, List, Optional)
+
+
 class Interface(object):
     """
     A parent class for the netplan interface definitions.
     """
     # TODO: add the schema and validate using it.
     def __init__(self, name, section, data):
+        # type: (Interface, str, str, Dict[str, Any]) -> None
         self.name = name
         self.section = section
         self.data = data
 
     def __str__(self):
+        # type: (Interface) -> str
         return '{sect}/{name}'.format(sect=self.section, name=self.name)
 
     def __repr__(self):
+        # type: (Interface) -> str
         return '{cls}(name={name}, section={sect}, data={data})' \
                .format(cls=type(self).__name__, name=repr(self.name),
                        sect=repr(self.section), data=repr(self.data))
 
     def get(self, name, default=None):
+        # type: (Interface, str, Optional[Any]) -> Any
         """
         Get an interface's property.
         """
         return self.data.get(name, default)
 
     def set(self, name, value):
+        # type: (Interface, str, Any) -> None
         """
         Set an interface's property.
         """
         self.data[name] = value
 
     def get_parent_names(self):
+        # type: (Interface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.
@@ -71,6 +83,7 @@ class EthernetInterface(PhysicalInterface):
     """
     # TODO: add the additional schema fields.
     def get_parent_names(self):
+        # type: (EthernetInterface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.
@@ -85,6 +98,7 @@ class WirelessInterface(PhysicalInterface):
     """
     # TODO: add the additional schema fields.
     def get_parent_names(self):
+        # type: (WirelessInterface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.
@@ -99,12 +113,13 @@ class BondInterface(Interface):
     """
     # TODO: add the additional schema fields.
     def get_parent_names(self):
+        # type: (BondInterface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.
         For a bond interface, this is the list of the members.
         """
-        return self.get('interfaces', [])
+        return cast(List[str], self.get('interfaces', []))
 
 
 class BridgeInterface(Interface):
@@ -113,12 +128,13 @@ class BridgeInterface(Interface):
     """
     # TODO: add the additional schema fields.
     def get_parent_names(self):
+        # type: (BridgeInterface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.
         For a bridge interface, this is the list of the members.
         """
-        return self.get('interfaces', [])
+        return cast(List[str], self.get('interfaces', []))
 
 
 class VLANInterface(Interface):
@@ -127,6 +143,7 @@ class VLANInterface(Interface):
     """
     # TODO: add the additional schema fields.
     def get_parent_names(self):
+        # type: (VLANInterface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.

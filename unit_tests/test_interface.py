@@ -19,9 +19,14 @@ Unit tests for the netplan.interface module.
 
 import unittest
 
+from typing import List, Type
+
 import ddt
 
 from netplan import interface as npiface
+
+
+_TYPING_USED = (List, Type)
 
 
 @ddt.ddt
@@ -39,6 +44,7 @@ class TestInterfaces(unittest.TestCase):
         npiface.BridgeInterface,
     )
     def test_interfaces_basic(self, cls):
+        # type: (TestInterfaces, Type[npiface.Interface]) -> None
         """
         Test some basic functionality of the interface classes.
         """
@@ -89,6 +95,7 @@ class TestInterfaces(unittest.TestCase):
     )
     @ddt.unpack
     def test_parent_interface(self, cls, parents):
+        # type: (TestInterfaces, Type[npiface.Interface], List[str]) -> None
         """
         Test querying an interface for its parent.
         """

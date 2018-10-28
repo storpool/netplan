@@ -24,10 +24,16 @@ import sys
 import unittest
 import yaml
 
+from typing import List, Tuple
+
 import ddt
 
 
+_TYPING_USED = (List, Tuple)
+
+
 def run_parser(args):
+    # type: (List[str]) -> Tuple[int, str, str]
     """
     Run the netplan-parser utility with the specified command-line
     arguments and return its exit code and output.
@@ -61,6 +67,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
     )
     @ddt.unpack
     def test_queries(self, option, regex):
+        # type: (TestCmdNetPlanParser, str, str) -> None
         """
         Make sure `netplan-parser --help` exits with code 0 and outputs
         a string starting with "usage:".
@@ -84,6 +91,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
     )
     @ddt.unpack
     def test_show(self, root, names):
+        # type: (TestCmdNetPlanParser, str, str) -> None
         """
         Test "netplan-parser show".
         """
@@ -125,6 +133,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
     )
     @ddt.unpack
     def test_related(self, root, query, names):
+        # type: (TestCmdNetPlanParser, str, str, str) -> None
         """
         Test "netplan-parser related".
         """
@@ -167,6 +176,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
     )
     @ddt.unpack
     def test_physical(self, root, query, names):
+        # type: (TestCmdNetPlanParser, str, str, str) -> None
         """
         Test "netplan-parser physical".
         """
@@ -197,6 +207,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
         self.assertEqual(' '.join(sorted(data.keys())), names)
 
     def test_exclude(self):
+        # type: (TestCmdNetPlanParser) -> None
         """
         Test "netplan-parser -x conffile show".
         """

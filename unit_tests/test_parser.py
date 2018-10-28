@@ -19,10 +19,15 @@ Unit tests for the netplan.parser module.
 
 import unittest
 
+from typing import cast, Any, Dict, List, Optional, Set, Type
+
 import ddt
 
 from netplan import interface as npiface
 from netplan import parser as npparser
+
+
+_TYPING_USED = (cast, Any, Dict, List, Optional, Set, Type)
 
 
 @ddt.ddt
@@ -57,7 +62,11 @@ class TestParserCombine(unittest.TestCase):
          {'a': 42, 'b': {'c': [2, 4], 'd': '3', 'e': 5}, 'f': 6.0}),
     )
     @ddt.unpack
-    def test_combine(self, cur, new, res):
+    def test_combine(self,  # type: TestParserCombine
+                     cur,   # type: Dict[str, Any]
+                     new,   # type: Dict[str, Any]
+                     res    # type: Dict[str, Any]
+                     ):     # type: (...) -> None
         """
         Unit tests for the _combine_dict() method.
         """
@@ -73,20 +82,22 @@ class TestParser(unittest.TestCase):
     Unit tests for the Parser class.
     """
     def test_by_section(self):
+        # type: (TestParser) -> None
         """
         All the values in the npparser.Parser.BY_SECTION dictionary
         should be "real" NetPlan*Interface classes.
         """
-        seen = set()
+        seen = set()  # type: Set[Type[npiface.Interface]]
         for cls in npparser.Parser.BY_SECTION.values():
             self.assertIsNot(cls, npiface.Interface)
             self.assertIsNot(cls, npiface.PhysicalInterface)
             self.assertTrue(issubclass(cls, npiface.Interface))
 
-            self.assertNotIn(cls, seen)
+            self.assertNotIn(cast(Type[npiface.Interface], cls), seen)
             seen.add(cls)
 
     def test_override(self):
+        # type: (TestParser) -> None
         """
         A file should override a file with the same name in an earlier
         directory.
@@ -121,6 +132,7 @@ class TestParser(unittest.TestCase):
         ['something-else.yaml', '01-override.yaml'],
     )
     def test_exclude(self, exclude):
+        # type: (TestParser, List[str]) -> None
         """
         NetPlanParser.parse() should honor the "exclude" parameter.
         """
@@ -167,7 +179,12 @@ class TestParser(unittest.TestCase):
         ('full-9002', ['99-storpool.yaml'], 'enp2s0.617', None),
     )
     @ddt.unpack
-    def test_mtu(self, subdir, exclude, iface, mtu):
+    def test_mtu(self,      # type: TestParser
+                 subdir,    # type: str
+                 exclude,   # type: Optional[List[str]]
+                 iface,     # type: str
+                 mtu        # type: Optional[int]
+                 ):         # type: (...) -> None
         """
         _combine_dict() and "exclude" should work together to
         parse some real-life data files.
@@ -205,7 +222,12 @@ class TestParser(unittest.TestCase):
          'ethernets: enp2s0, enp4s0'),
     )
     @ddt.unpack
-    def test_related(self, subdir, ifaces, parents, phys):
+    def test_related(self,      # type: TestParser
+                     subdir,    # type: str
+                     ifaces,    # type: List[str]
+                     parents,   # type: str
+                     phys       # type: str
+                     ):         # type: (...) -> None
         """
         get_all_interfaces() should return all the related interfaces, and
         get_physical_interfaces() should only return physical interfaces.

@@ -36,6 +36,10 @@ setuptools.setup(
     keywords='netplan',
     url='https://github.com/storpool/netplan',
 
+    package_data={
+        'netplan': ['py.typed'],
+    },
+
     zip_safe=True,
 
     scripts=['bin/netplan-parser'],
