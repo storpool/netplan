@@ -19,9 +19,10 @@ A parser for the netplan configuration.
 
 
 import os
-import yaml
 
 from typing import cast, Any, Dict, Iterable, List, Optional
+
+import yaml
 
 from . import config as npconfig
 from . import interface as npiface

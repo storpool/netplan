@@ -22,11 +22,11 @@ import json
 import subprocess
 import sys
 import unittest
-import yaml
 
 from typing import List, Tuple
 
 import ddt
+import yaml
 
 
 _TYPING_USED = (List, Tuple)
@@ -79,7 +79,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
         (code, output, errs) = run_parser([option])
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
-        self.assertRegexpMatches(output, regex)
+        self.assertRegexpMatches(output, regex)  # pylint: disable=W1505
 
     @ddt.data(
         ('test_data/override',

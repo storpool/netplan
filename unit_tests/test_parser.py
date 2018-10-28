@@ -72,7 +72,7 @@ class TestParserCombine(unittest.TestCase):
         """
         parser = npparser.Parser()
         data = cur
-        parser._combine_dicts(data, new)
+        parser._combine_dicts(data, new)  # pylint: disable=protected-access
         self.assertEqual(data, res)
 
 
