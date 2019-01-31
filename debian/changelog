@@ -1,4 +1,4 @@
-netplan (0.3.0-1~0+sp1) UNRELEASED; urgency=medium
+netplan (0.3.0-1~0+sp1) unstable; urgency=medium
 
   * Rename the Debian packaging branch to debian/master in
     accordance with DEP 14.
@@ -18,7 +18,7 @@ netplan (0.3.0-1~0+sp1) UNRELEASED; urgency=medium
   * Add a simple adequate autopkgtest.
   * New upstream release.
 
- -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:25:34 +0200
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:54:15 +0200
 
 netplan (0.2.0-1~0+sp1) unstable; urgency=medium
 
