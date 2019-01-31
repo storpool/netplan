@@ -1,7 +1,0 @@
-# lintian does not understand the "debhelper-compat (= X)"
-# build-dependency
-netplan source: debhelper-compat-file-is-missing
-netplan source: package-uses-deprecated-debhelper-compat-version 1
-netplan source: package-uses-debhelper-but-lacks-build-depends
-netplan source: package-lacks-versioned-build-depends-on-debhelper 1
-netplan source: missing-build-dependency debhelper
