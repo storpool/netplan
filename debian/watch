@@ -1,0 +1,3 @@
+version=4
+opts=pgpsigurlmangle=s/$/.asc/,uversionmangle=s/(rc|a|b|c)/~$1/ \
+http://repo.storpool.com/public/files/@PACKAGE@/@PACKAGE@-@ANY_VERSION@@ARCHIVE_EXT@
