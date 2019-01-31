@@ -3,7 +3,7 @@ Section: python
 Priority: optional
 Maintainer: Peter Pentchev <pp@storpool.com>
 Build-Depends:
- debhelper (>> 11~),
+ debhelper (>> 10~),
  dh-python,
  python,
  python-all,
