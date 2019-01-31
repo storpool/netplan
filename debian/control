@@ -14,8 +14,8 @@ Build-Depends:
  python3-yaml
 Standards-Version: 4.1.5
 Homepage: https://github.com/storpool/netplan/
-Vcs-Git: https://github.com/storpool/netplan.git -b debian
-Vcs-Browser: https://github.com/storpool/netplan/tree/debian
+Vcs-Git: https://github.com/storpool/netplan.git -b debian/master
+Vcs-Browser: https://github.com/storpool/netplan/tree/debian/master
 Rules-Requires-Root: no
 
 Package: python-netplan
