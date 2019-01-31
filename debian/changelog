@@ -1,8 +1,9 @@
 netplan (0.3.0-1~0+sp1ubuntu1~18.10.1) cosmic; urgency=medium
 
   * Rebuild for Ubuntu 18.10 (Cosmic Cuttlefish).
+  * Downgrade the debhelper compatibility level to 11 with no changes.
 
- -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:59:48 +0200
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 15:03:30 +0200
 
 netplan (0.3.0-1~0+sp1ubuntu1) disco; urgency=medium
 
