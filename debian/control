@@ -20,10 +20,16 @@ Rules-Requires-Root: no
 
 Package: python-netplan
 Architecture: all
+Provides:
+ ${python:Provides},
 Depends:
  ${misc:Depends},
  ${python:Depends},
  python-yaml
+Recommends:
+ ${python:Recommends},
+Suggests:
+ ${python:Suggests},
 Description: Python 2.x library for parsing the netplan configuration data
  This module parses the YAML configuration files describing the system's
  network configuration in the format used by the netplan.io package.
@@ -35,10 +41,16 @@ Description: Python 2.x library for parsing the netplan configuration data
 
 Package: python3-netplan
 Architecture: all
+Provides:
+ ${python3:Provides},
 Depends:
  ${misc:Depends},
  ${python3:Depends},
  python3-yaml
+Recommends:
+ ${python3:Recommends},
+Suggests:
+ ${python3:Suggests},
 Description: Python 3.x library for parsing the netplan configuration data
  This module parses the YAML configuration files describing the system's
  network configuration in the format used by the netplan.io package.
