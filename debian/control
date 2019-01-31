@@ -65,9 +65,9 @@ Section: utils
 Architecture: all
 Depends:
  ${misc:Depends},
- ${python:Depends},
- python-netplan (= ${binary:Version}),
- python-yaml
+ ${python3:Depends},
+ python3-netplan (= ${binary:Version}),
+ python3-yaml
 Description: command-line tool for parsing the netplan configuration data
  This module parses the YAML configuration files describing the system's
  network configuration in the format used by the netplan.io package.
