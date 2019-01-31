@@ -1,3 +1,9 @@
+netplan (0.3.0-1~0+sp1ubuntu1) disco; urgency=medium
+
+  * Rebuild for Ubuntu 19.04 (Disco Dingo).
+
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:56:14 +0200
+
 netplan (0.3.0-1~0+sp1) unstable; urgency=medium
 
   * Rename the Debian packaging branch to debian/master in
