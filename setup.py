@@ -19,14 +19,19 @@ import setuptools
 
 import netplan
 
+with open('README.md', mode='r') as readme:
+    long_description = readme.read()
+
 setuptools.setup(
     name='netplan',
     version=netplan.VERSION,
     packages=('netplan',),
 
-    author='Peter Pentchev',
-    author_email='pp@storpool.com',
+    author='StorPool OpenStack development team',
+    author_email='openstack-dev@storpool.com',
     description='A library for parsing the netplan configuration data',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     license='Apache License 2.0',
     keywords='netplan',
     url='https://github.com/storpool/netplan',
