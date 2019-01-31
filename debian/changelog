@@ -1,3 +1,24 @@
+netplan (0.2.0-1~0+sp2) UNRELEASED; urgency=medium
+
+  * Rename the Debian packaging branch to debian/master in
+    accordance with DEP 14.
+  * Minimize the upstream signing key, only keep the pp@storpool.com UID.
+  * Add a watch file.
+  * Drop the debhelper-compat Lintian overrides; Lintian 2.5.98
+    no longer issues these errors and warnings.
+  * Make full use of debhelper's support for pybuild.
+  * Bring up to compliance with Debian Policy 4.3.0: install CHANGES.md
+    as NEWS.
+  * Use all the python:* and python3:* substvars.
+  * Switch the netplan-parser package to Python 3.x.
+  * Bump the debhelper compatibility level to 12 with no changes.
+  * Add a trivial git-buildpackage config file.
+  * Add the year 2019 to StorPool's debian/* copyright notice.
+  * Add the typos patch to correct a typographical error.
+  * Add a simple adequate autopkgtest.
+
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:25:34 +0200
+
 netplan (0.2.0-1~0+sp1) unstable; urgency=medium
 
   * New upstream release.
