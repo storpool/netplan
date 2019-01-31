@@ -12,7 +12,7 @@ Build-Depends:
  python3-all,
  python3-setuptools,
  python3-yaml
-Standards-Version: 4.1.5
+Standards-Version: 4.3.0
 Homepage: https://github.com/storpool/netplan/
 Vcs-Git: https://github.com/storpool/netplan.git -b debian/master
 Vcs-Browser: https://github.com/storpool/netplan/tree/debian/master

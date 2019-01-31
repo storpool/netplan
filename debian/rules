@@ -7,6 +7,12 @@ override_dh_auto_install:
 	rm $(CURDIR)/debian/python-netplan/usr/bin/netplan-parser
 	rm $(CURDIR)/debian/python3-netplan/usr/bin/netplan-parser
 
+override_dh_installchangelogs:
+	dh_installchangelogs -X CHANGES.md
+	for pkg in $(shell dh_listpackages); do \
+		install -m 644 CHANGES.md "debian/$$pkg/usr/share/doc/$$pkg/NEWS"; \
+	done
+
 override_dh_auto_clean:
 	dh_auto_clean --buildsystem=pybuild
 	rm -rf netplan.egg-info
