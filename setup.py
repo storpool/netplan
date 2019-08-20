@@ -34,7 +34,7 @@ setuptools.setup(
     license="Apache License 2.0",
     keywords="netplan",
     url="https://github.com/storpool/netplan",
-    install_requires=["PyYAML"],
+    install_requires=["PyYAML", 'typing;python_version<"3"'],
     package_data={"netplan": ["py.typed"]},
     zip_safe=True,
     scripts=["bin/netplan-parser"],
