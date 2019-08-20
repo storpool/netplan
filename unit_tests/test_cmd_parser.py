@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -108,7 +108,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
                                            'show'])
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
-        data = yaml.load(output)
+        data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(' '.join(sorted(data.keys())), names)
 
@@ -151,7 +151,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
                                            'related'] + query_split)
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
-        data = yaml.load(output)
+        data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(' '.join(sorted(data.keys())), names)
 
@@ -194,7 +194,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
                                            'physical'] + query_split)
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
-        data = yaml.load(output)
+        data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(' '.join(sorted(data.keys())), names)
 
@@ -216,7 +216,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
                                            'show', 'enp2s0'])
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
-        data = yaml.load(output)
+        data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(list(data.keys()), ['enp2s0'])
         self.assertEqual(data['enp2s0'].get('mtu', 1500), 9002)
@@ -227,7 +227,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
                                            'show', 'enp2s0'])
         self.assertEqual(errs, '')
         self.assertEqual(code, 0)
-        data = yaml.load(output)
+        data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
         self.assertEqual(list(data.keys()), ['enp2s0'])
         self.assertEqual(data['enp2s0'].get('mtu', 1500), 9000)

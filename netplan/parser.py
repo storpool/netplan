@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -146,7 +146,7 @@ class Parser(object):
             containing the data about the interfaces.
             """
             with open(fname, mode='r') as infile:
-                contents = yaml.load(infile)
+                contents = yaml.safe_load(infile)
             if not isinstance(contents, dict):
                 raise Exception('The contents is not a YAML dictionary')
             net = contents.get('network')
