@@ -15,16 +15,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
 import setuptools
 
-import netplan
+
+RE_VERSION = r"""^
+    \s* VERSION \s* = \s* "
+    (?P<version>
+           (?: 0 | [1-9][0-9]* )    # major
+        \. (?: 0 | [1-9][0-9]* )    # minor
+        \. (?: 0 | [1-9][0-9]* )    # patchlevel
+    (?: \. [a-zA-Z0-9]+ )?          # optional addendum (dev1, beta3, etc.)
+    )
+    " \s*
+    $"""
+
+
+def get_version():
+    # type: () -> str
+    """ Get the version string from the module's __init__ file. """
+    found = None
+    re_semver = re.compile(RE_VERSION, re.X)
+    with open("netplan/config.py") as init:
+        for line in init.readlines():
+            match = re_semver.match(line)
+            if not match:
+                continue
+            assert found is None
+            found = match.group("version")
+
+    assert found is not None
+    return found
+
 
 with open("README.md", mode="r") as readme:
     long_description = readme.read()
 
 setuptools.setup(
     name="netplan",
-    version=netplan.VERSION,
+    version=get_version(),
     packages=("netplan",),
     author="StorPool OpenStack development team",
     author_email="openstack-dev@storpool.com",
