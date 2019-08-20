@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import unittest
 from typing import List, Type
 
 import ddt
+import pytest
 
 from netplan import interface as npiface
 
@@ -31,6 +32,7 @@ _TYPING_USED = (List, Type)
 
 @ddt.ddt
 class TestInterfaces(unittest.TestCase):
+    # pylint: disable=no-self-use
     """
     Test various aspects of the *Interface classes.
     """
@@ -50,43 +52,44 @@ class TestInterfaces(unittest.TestCase):
         Test some basic functionality of the interface classes.
         """
         obj = cls("iface", "section", {"mtu": 1500})
-        self.assertIsInstance(obj, npiface.Interface)
-        self.assertIsInstance(obj, cls)
-        self.assertEqual(obj.name, "iface")
-        self.assertEqual(obj.section, "section")
+        assert isinstance(obj, npiface.Interface)
+        assert isinstance(obj, cls)
+        assert obj.name == "iface"
+        assert obj.section == "section"
 
-        self.assertEqual(str(obj), "section/iface")
+        assert str(obj) == "section/iface"
         got = repr(obj)
         exp = (
             "{name}(name='iface', section='section', "
             "data={{'mtu': 1500}})".format(name=cls.__name__)
         )
-        self.assertEqual(got, exp)
+        assert got == exp
 
-        self.assertEqual(obj.data, {"mtu": 1500})
-        self.assertEqual(obj.data.get("mtu"), 1500)
-        self.assertEqual(obj.data.get("mtux"), None)
-        self.assertEqual(obj.data.get("mtu", 9000), 1500)
-        self.assertEqual(obj.data.get("mtux", 9000), 9000)
+        assert obj.data == {"mtu": 1500}
+        assert obj.data.get("mtu") == 1500
+        assert obj.data.get("mtux") is None
+        assert obj.data.get("mtu", 9000) == 1500
+        assert obj.data.get("mtux", 9000) == 9000
 
         obj.set("mtu", 1600)
-        self.assertEqual(obj.data, {"mtu": 1600})
-        self.assertEqual(obj.data.get("mtu"), 1600)
-        self.assertEqual(obj.data.get("mtux"), None)
-        self.assertEqual(obj.data.get("mtu", 9000), 1600)
-        self.assertEqual(obj.data.get("mtux", 9000), 9000)
+        assert obj.data == {"mtu": 1600}
+        assert obj.data.get("mtu") == 1600
+        assert obj.data.get("mtux") is None
+        assert obj.data.get("mtu", 9000) == 1600
+        assert obj.data.get("mtux", 9000) == 9000
 
         obj.set("mtux", 1600)
-        self.assertEqual(obj.data, {"mtu": 1600, "mtux": 1600})
-        self.assertEqual(obj.data.get("mtu"), 1600)
-        self.assertEqual(obj.data.get("mtux"), 1600)
-        self.assertEqual(obj.data.get("mtu", 9000), 1600)
-        self.assertEqual(obj.data.get("mtux", 9000), 1600)
+        assert obj.data == {"mtu": 1600, "mtux": 1600}
+        assert obj.data.get("mtu") == 1600
+        assert obj.data.get("mtux") == 1600
+        assert obj.data.get("mtu", 9000) == 1600
+        assert obj.data.get("mtux", 9000) == 1600
 
         if cls is npiface.Interface or cls is npiface.PhysicalInterface:
-            self.assertRaises(Exception, obj.get_parent_names)
+            with pytest.raises(Exception):
+                obj.get_parent_names()
         else:
-            self.assertEqual(obj.get_parent_names(), [])
+            assert obj.get_parent_names() == []
 
     @ddt.data(
         (npiface.EthernetInterface, []),
@@ -104,4 +107,4 @@ class TestInterfaces(unittest.TestCase):
         obj = cls(
             "iface", "section", {"interfaces": ["i1", "i2"], "link": "lnk"}
         )
-        self.assertEqual(obj.get_parent_names(), parents)
+        assert obj.get_parent_names() == parents

@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@ _TYPING_USED = (cast, Any, Dict, List, Optional, Set, Type)
 
 @ddt.ddt
 class TestParserCombine(unittest.TestCase):
+    # pylint: disable=no-self-use
     """
     Unit tests for the _combine_dict() method.
     """
@@ -67,11 +68,12 @@ class TestParserCombine(unittest.TestCase):
         parser = npparser.Parser()
         data = cur
         parser._combine_dicts(data, new)  # pylint: disable=protected-access
-        self.assertEqual(data, res)
+        assert data == res
 
 
 @ddt.ddt
 class TestParser(unittest.TestCase):
+    # pylint: disable=no-self-use
     """
     Unit tests for the Parser class.
     """
@@ -84,11 +86,11 @@ class TestParser(unittest.TestCase):
         """
         seen = set()  # type: Set[Type[npiface.Interface]]
         for cls in npparser.Parser.BY_SECTION.values():
-            self.assertIsNot(cls, npiface.Interface)
-            self.assertIsNot(cls, npiface.PhysicalInterface)
-            self.assertTrue(issubclass(cls, npiface.Interface))
+            assert cls is not npiface.Interface
+            assert cls is not npiface.PhysicalInterface
+            assert issubclass(cls, npiface.Interface)
 
-            self.assertNotIn(cast(Type[npiface.Interface], cls), seen)
+            assert cast(Type[npiface.Interface], cls) not in seen
             seen.add(cls)
 
     def test_override(self):
@@ -105,11 +107,9 @@ class TestParser(unittest.TestCase):
             ]
         )
         files = parser.find_files()
-        self.assertEqual(
-            files, ["test_data/override/lib/netplan/01-override.yaml"]
-        )
+        assert files == ["test_data/override/lib/netplan/01-override.yaml"]
         data = parser.parse()
-        self.assertEqual(list(data.data.keys()), ["eno1"])
+        assert list(data.data.keys()) == ["eno1"]
 
         parser = npparser.Parser(
             dirs=[
@@ -119,11 +119,9 @@ class TestParser(unittest.TestCase):
             ]
         )
         files = parser.find_files()
-        self.assertEqual(
-            files, ["test_data/override/etc-2/netplan/01-override.yaml"]
-        )
+        assert files == ["test_data/override/etc-2/netplan/01-override.yaml"]
         data = parser.parse()
-        self.assertEqual(list(data.data.keys()), ["eno2"])
+        assert list(data.data.keys()) == ["eno2"]
 
     @ddt.data(
         ["01-override.yaml"],
@@ -143,11 +141,9 @@ class TestParser(unittest.TestCase):
             ]
         )
         files = parser.find_files()
-        self.assertEqual(
-            files, ["test_data/override/lib/netplan/01-override.yaml"]
-        )
+        assert files == ["test_data/override/lib/netplan/01-override.yaml"]
         data = parser.parse(exclude=exclude)
-        self.assertEqual(data.data, {})
+        assert data.data == {}
 
         parser = npparser.Parser(
             dirs=[
@@ -157,11 +153,9 @@ class TestParser(unittest.TestCase):
             ]
         )
         files = parser.find_files()
-        self.assertEqual(
-            files, ["test_data/override/etc-2/netplan/01-override.yaml"]
-        )
+        assert files == ["test_data/override/etc-2/netplan/01-override.yaml"]
         data = parser.parse(exclude=exclude)
-        self.assertEqual(data.data, {})
+        assert data.data == {}
 
     @ddt.data(
         ("override", None, "eno1", 1500),
@@ -200,8 +194,8 @@ class TestParser(unittest.TestCase):
             data = parser.parse()
         else:
             data = parser.parse(exclude=exclude)
-        self.assertIn(iface, data.data)
-        self.assertEqual(data.data[iface].get("mtu"), mtu)
+        assert iface in data.data
+        assert data.data[iface].get("mtu") == mtu
 
     @ddt.data(
         ("override", ["eno1"], "ethernets: eno1", "ethernets: eno1"),
@@ -243,6 +237,6 @@ class TestParser(unittest.TestCase):
         ]
         parser = npparser.Parser(dirs=dirs)
         data = parser.parse()
-        self.assertTrue(set(ifaces).issubset(set(data.data.keys())))
-        self.assertEqual(str(data.get_all_interfaces(ifaces)), parents)
-        self.assertEqual(str(data.get_physical_interfaces(ifaces)), phys)
+        assert set(ifaces).issubset(set(data.data.keys()))
+        assert str(data.get_all_interfaces(ifaces)) == parents
+        assert str(data.get_physical_interfaces(ifaces)) == phys
