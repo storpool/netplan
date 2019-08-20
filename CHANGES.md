@@ -1,5 +1,9 @@
 # Change log for netplan
 
+## Version 0.3.3 (2018-08-20)
+
+- in setup.py, obtain the netplan version string using a regex
+
 ## Version 0.3.2 (2018-08-20)
 
 - add typing as a runtime dependency on Python 2.x
