@@ -1,5 +1,15 @@
 # Change log for netplan
 
+## Version 0.3.1 (2018-08-20)
+
+- add type hints
+- fix some pylint nits
+- use `yaml.safe_load()` instead of `yaml.load()`
+- add PyYAML as a runtime dependency
+- reformat the source code using black
+- use pytest instead of ostestr and simplify the unit tests
+- use relative imports in `__init__.py`
+
 ## Version 0.3.0 (2018-08-01)
 
 - update the package metadata in setup.py
