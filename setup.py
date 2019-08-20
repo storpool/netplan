@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +35,10 @@ setuptools.setup(
     license='Apache License 2.0',
     keywords='netplan',
     url='https://github.com/storpool/netplan',
+
+    install_requires=[
+        'PyYAML',
+    ],
 
     package_data={
         'netplan': ['py.typed'],
