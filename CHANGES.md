@@ -1,5 +1,9 @@
 # Change log for netplan
 
+## Version 0.3.2 (2018-08-20)
+
+- add typing as a runtime dependency on Python 2.x
+
 ## Version 0.3.1 (2018-08-20)
 
 - add type hints
