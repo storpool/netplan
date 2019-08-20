@@ -155,7 +155,7 @@ class Parser(object):
             ver = net.get('version')
             if ver is None:
                 raise Exception('No "network/version" element')
-            elif ver != 2:
+            if ver != 2:
                 raise Exception('Unsupported format version {ver}'
                                 .format(ver=ver))
             del net['version']

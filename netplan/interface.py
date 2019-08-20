@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,7 +74,6 @@ class PhysicalInterface(Interface):
     A parent class for netplan interface definitions for interfaces with
     an actual physical datalink (e.g. Ethernet or wi-fi ones.
     """
-    pass
 
 
 class EthernetInterface(PhysicalInterface):
