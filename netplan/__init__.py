@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,8 +45,8 @@ Example usage:
 """
 
 
-from netplan.config import NetPlan
-from netplan.parser import Parser
+from .config import NetPlan
+from .parser import Parser
 
 VERSION = NetPlan.VERSION
 
