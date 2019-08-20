@@ -1,4 +1,4 @@
-# Copyright (c) 2018  StorPool.
+# Copyright (c) 2018, 2019  StorPool.
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ class NetPlan(object):
     interface names to netplan.interface.* classes.
     """
 
-    VERSION = "0.3.2"
+    VERSION = "0.3.3"
 
     def __init__(self, data):
         # type: (NetPlan, Dict[str, npiface.Interface]) -> None
