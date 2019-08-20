@@ -19,32 +19,23 @@ import setuptools
 
 import netplan
 
-with open('README.md', mode='r') as readme:
+with open("README.md", mode="r") as readme:
     long_description = readme.read()
 
 setuptools.setup(
-    name='netplan',
+    name="netplan",
     version=netplan.VERSION,
-    packages=('netplan',),
-
-    author='StorPool OpenStack development team',
-    author_email='openstack-dev@storpool.com',
-    description='A library for parsing the netplan configuration data',
+    packages=("netplan",),
+    author="StorPool OpenStack development team",
+    author_email="openstack-dev@storpool.com",
+    description="A library for parsing the netplan configuration data",
     long_description=long_description,
-    long_description_content_type='text/markdown',
-    license='Apache License 2.0',
-    keywords='netplan',
-    url='https://github.com/storpool/netplan',
-
-    install_requires=[
-        'PyYAML',
-    ],
-
-    package_data={
-        'netplan': ['py.typed'],
-    },
-
+    long_description_content_type="text/markdown",
+    license="Apache License 2.0",
+    keywords="netplan",
+    url="https://github.com/storpool/netplan",
+    install_requires=["PyYAML"],
+    package_data={"netplan": ["py.typed"]},
     zip_safe=True,
-
-    scripts=['bin/netplan-parser'],
+    scripts=["bin/netplan-parser"],
 )

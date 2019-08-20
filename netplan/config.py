@@ -30,7 +30,8 @@ class NetPlan(object):
     A full netplan configuration; the "data" member is a dictionary of
     interface names to netplan.interface.* classes.
     """
-    VERSION = '0.3.1.dev1'
+
+    VERSION = "0.3.1.dev1"
 
     def __init__(self, data):
         # type: (NetPlan, Dict[str, npiface.Interface]) -> None
@@ -50,21 +51,21 @@ class NetPlan(object):
 
         # Sort the interface names within each section
         collected = [
-            '{sect}: {ifaces}'.format(
-                sect=section,
-                ifaces=', '.join(sorted(data)))
+            "{sect}: {ifaces}".format(
+                sect=section, ifaces=", ".join(sorted(data))
+            )
             for (section, data) in by_section.items()
         ]
 
         # Return a list sorted by section name
-        return '; '.join(sorted(collected))
+        return "; ".join(sorted(collected))
 
     def __repr__(self):
         # type: (NetPlan) -> str
         """
         Provide a Python-style representation.
         """
-        return 'NetPlan({d})'.format(d=repr(self.data))
+        return "NetPlan({d})".format(d=repr(self.data))
 
     def get_all_interfaces(self, ifaces):
         # type: (NetPlan, List[str]) -> NetPlan
@@ -79,7 +80,8 @@ class NetPlan(object):
             newnew = set()  # type: Set[str]
             for iface in new:
                 newnew = newnew.union(
-                    set(self.data[iface].get_parent_names()) - cur)
+                    set(self.data[iface].get_parent_names()) - cur
+                )
             new = newnew
         return NetPlan({iface: self.data[iface] for iface in cur})
 
@@ -93,6 +95,9 @@ class NetPlan(object):
         wireless interface this function would return its own configuration.
         """
         related = self.get_all_interfaces(ifaces)
-        phys = [d for d in related.data.values()
-                if isinstance(d, npiface.PhysicalInterface)]
+        phys = [
+            d
+            for d in related.data.values()
+            if isinstance(d, npiface.PhysicalInterface)
+        ]
         return NetPlan({d.name: d for d in phys})

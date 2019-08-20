@@ -34,6 +34,7 @@ class TestInterfaces(unittest.TestCase):
     """
     Test various aspects of the *Interface classes.
     """
+
     @ddt.data(
         npiface.Interface,
         npiface.PhysicalInterface,
@@ -48,40 +49,41 @@ class TestInterfaces(unittest.TestCase):
         """
         Test some basic functionality of the interface classes.
         """
-        obj = cls('iface', 'section', {'mtu': 1500})
+        obj = cls("iface", "section", {"mtu": 1500})
         self.assertIsInstance(obj, npiface.Interface)
         self.assertIsInstance(obj, cls)
-        self.assertEqual(obj.name, 'iface')
-        self.assertEqual(obj.section, 'section')
+        self.assertEqual(obj.name, "iface")
+        self.assertEqual(obj.section, "section")
 
-        self.assertEqual(str(obj), 'section/iface')
+        self.assertEqual(str(obj), "section/iface")
         got = repr(obj)
-        exp = "{name}(name='iface', section='section', data={{'mtu': 1500}})" \
-              .format(name=cls.__name__)
+        exp = (
+            "{name}(name='iface', section='section', "
+            "data={{'mtu': 1500}})".format(name=cls.__name__)
+        )
         self.assertEqual(got, exp)
 
-        self.assertEqual(obj.data, {'mtu': 1500})
-        self.assertEqual(obj.data.get('mtu'), 1500)
-        self.assertEqual(obj.data.get('mtux'), None)
-        self.assertEqual(obj.data.get('mtu', 9000), 1500)
-        self.assertEqual(obj.data.get('mtux', 9000), 9000)
+        self.assertEqual(obj.data, {"mtu": 1500})
+        self.assertEqual(obj.data.get("mtu"), 1500)
+        self.assertEqual(obj.data.get("mtux"), None)
+        self.assertEqual(obj.data.get("mtu", 9000), 1500)
+        self.assertEqual(obj.data.get("mtux", 9000), 9000)
 
-        obj.set('mtu', 1600)
-        self.assertEqual(obj.data, {'mtu': 1600})
-        self.assertEqual(obj.data.get('mtu'), 1600)
-        self.assertEqual(obj.data.get('mtux'), None)
-        self.assertEqual(obj.data.get('mtu', 9000), 1600)
-        self.assertEqual(obj.data.get('mtux', 9000), 9000)
+        obj.set("mtu", 1600)
+        self.assertEqual(obj.data, {"mtu": 1600})
+        self.assertEqual(obj.data.get("mtu"), 1600)
+        self.assertEqual(obj.data.get("mtux"), None)
+        self.assertEqual(obj.data.get("mtu", 9000), 1600)
+        self.assertEqual(obj.data.get("mtux", 9000), 9000)
 
-        obj.set('mtux', 1600)
-        self.assertEqual(obj.data, {'mtu': 1600, 'mtux': 1600})
-        self.assertEqual(obj.data.get('mtu'), 1600)
-        self.assertEqual(obj.data.get('mtux'), 1600)
-        self.assertEqual(obj.data.get('mtu', 9000), 1600)
-        self.assertEqual(obj.data.get('mtux', 9000), 1600)
+        obj.set("mtux", 1600)
+        self.assertEqual(obj.data, {"mtu": 1600, "mtux": 1600})
+        self.assertEqual(obj.data.get("mtu"), 1600)
+        self.assertEqual(obj.data.get("mtux"), 1600)
+        self.assertEqual(obj.data.get("mtu", 9000), 1600)
+        self.assertEqual(obj.data.get("mtux", 9000), 1600)
 
-        if cls is npiface.Interface or \
-           cls is npiface.PhysicalInterface:
+        if cls is npiface.Interface or cls is npiface.PhysicalInterface:
             self.assertRaises(Exception, obj.get_parent_names)
         else:
             self.assertEqual(obj.get_parent_names(), [])
@@ -89,9 +91,9 @@ class TestInterfaces(unittest.TestCase):
     @ddt.data(
         (npiface.EthernetInterface, []),
         (npiface.WirelessInterface, []),
-        (npiface.VLANInterface, ['lnk']),
-        (npiface.BondInterface, ['i1', 'i2']),
-        (npiface.BridgeInterface, ['i1', 'i2']),
+        (npiface.VLANInterface, ["lnk"]),
+        (npiface.BondInterface, ["i1", "i2"]),
+        (npiface.BridgeInterface, ["i1", "i2"]),
     )
     @ddt.unpack
     def test_parent_interface(self, cls, parents):
@@ -99,6 +101,7 @@ class TestInterfaces(unittest.TestCase):
         """
         Test querying an interface for its parent.
         """
-        obj = cls('iface', 'section',
-                  {'interfaces': ['i1', 'i2'], 'link': 'lnk'})
+        obj = cls(
+            "iface", "section", {"interfaces": ["i1", "i2"], "link": "lnk"}
+        )
         self.assertEqual(obj.get_parent_names(), parents)

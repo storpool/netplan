@@ -39,17 +39,22 @@ def run_parser(args):
     arguments and return its exit code and output.
     """
     env = {k: v for (k, v) in os.environ.items()}
-    env['PYTHONPATH'] = ':'.join(sys.path)
-    cmd = [sys.executable, '--', 'bin/netplan-parser'] + args
-    proc = subprocess.Popen(cmd, env=env,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
+    env["PYTHONPATH"] = ":".join(sys.path)
+    cmd = [sys.executable, "--", "bin/netplan-parser"] + args
+    proc = subprocess.Popen(
+        cmd,
+        env=env,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
     out = proc.communicate()
     res = proc.wait()
-    return (res,
-            out[0].decode(encoding='US-ASCII'),
-            out[1].decode(encoding='utf-8'))
+    return (
+        res,
+        out[0].decode(encoding="US-ASCII"),
+        out[1].decode(encoding="utf-8"),
+    )
 
 
 @ddt.ddt
@@ -57,13 +62,11 @@ class TestCmdNetPlanParser(unittest.TestCase):
     """
     Test the netplan-parser command-line utility.
     """
+
     @ddt.data(
-        ('--help',
-         '^usage:'),
-        ('--version',
-         '^netplan-parser [0-9a-z.]+\n$'),
-        ('--features',
-         '^Features:.* netplan-parser=[0-9a-z.]+( [^\n]+)?\n$'),
+        ("--help", "^usage:"),
+        ("--version", "^netplan-parser [0-9a-z.]+\n$"),
+        ("--features", "^Features:.* netplan-parser=[0-9a-z.]+( [^\n]+)?\n$"),
     )
     @ddt.unpack
     def test_queries(self, option, regex):
@@ -77,17 +80,20 @@ class TestCmdNetPlanParser(unittest.TestCase):
         a single line that somewhat resembles a list of features.
         """
         (code, output, errs) = run_parser([option])
-        self.assertEqual(errs, '')
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         self.assertRegexpMatches(output, regex)  # pylint: disable=W1505
 
     @ddt.data(
-        ('test_data/override',
-         'eno1'),
-        ('test_data/full-9000',
-         'br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0'),
-        ('test_data/full-9002',
-         'br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0'),
+        ("test_data/override", "eno1"),
+        (
+            "test_data/full-9000",
+            "br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0",
+        ),
+        (
+            "test_data/full-9002",
+            "br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0",
+        ),
     )
     @ddt.unpack
     def test_show(self, root, names):
@@ -95,41 +101,36 @@ class TestCmdNetPlanParser(unittest.TestCase):
         """
         Test "netplan-parser show".
         """
-        (code, output, errs) = run_parser(['-f', 'names', '-r', root,
-                                           'show'])
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(["-f", "names", "-r", root, "show"])
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
-        lines = output.split('\n')
+        lines = output.split("\n")
         self.assertEqual(len(lines), 2)
         self.assertEqual(lines[0], names)
-        self.assertEqual(lines[1], '')
+        self.assertEqual(lines[1], "")
 
-        (code, output, errs) = run_parser(['-f', 'yaml', '-r', root,
-                                           'show'])
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(["-f", "yaml", "-r", root, "show"])
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(' '.join(sorted(data.keys())), names)
+        self.assertEqual(" ".join(sorted(data.keys())), names)
 
-        (code, output, errs) = run_parser(['-f', 'json', '-r', root,
-                                           'show'])
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(["-f", "json", "-r", root, "show"])
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = json.loads(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(' '.join(sorted(data.keys())), names)
+        self.assertEqual(" ".join(sorted(data.keys())), names)
 
     @ddt.data(
-        ('test_data/override',
-         'eno1',
-         'eno1'),
-        ('test_data/full-9000',
-         'br-enp4s0',
-         'br-enp4s0 enp4s0'),
-        ('test_data/full-9002',
-         'enp2s0.617 br-enp4s0',
-         'br-enp4s0 enp2s0 enp2s0.617 enp4s0'),
+        ("test_data/override", "eno1", "eno1"),
+        ("test_data/full-9000", "br-enp4s0", "br-enp4s0 enp4s0"),
+        (
+            "test_data/full-9002",
+            "enp2s0.617 br-enp4s0",
+            "br-enp4s0 enp2s0 enp2s0.617 enp4s0",
+        ),
     )
     @ddt.unpack
     def test_related(self, root, query, names):
@@ -137,42 +138,39 @@ class TestCmdNetPlanParser(unittest.TestCase):
         """
         Test "netplan-parser related".
         """
-        query_split = query.split(' ')
-        (code, output, errs) = run_parser(['-f', 'names', '-r', root,
-                                           'related'] + query_split)
-        self.assertEqual(errs, '')
+        query_split = query.split(" ")
+        (code, output, errs) = run_parser(
+            ["-f", "names", "-r", root, "related"] + query_split
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
-        lines = output.split('\n')
+        lines = output.split("\n")
         self.assertEqual(len(lines), 2)
         self.assertEqual(lines[0], names)
-        self.assertEqual(lines[1], '')
+        self.assertEqual(lines[1], "")
 
-        (code, output, errs) = run_parser(['-f', 'yaml', '-r', root,
-                                           'related'] + query_split)
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(
+            ["-f", "yaml", "-r", root, "related"] + query_split
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(' '.join(sorted(data.keys())), names)
+        self.assertEqual(" ".join(sorted(data.keys())), names)
 
-        (code, output, errs) = run_parser(['-f', 'json', '-r', root,
-                                           'related'] + query_split)
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(
+            ["-f", "json", "-r", root, "related"] + query_split
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = json.loads(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(' '.join(sorted(data.keys())), names)
+        self.assertEqual(" ".join(sorted(data.keys())), names)
 
     @ddt.data(
-        ('test_data/override',
-         'eno1',
-         'eno1'),
-        ('test_data/full-9000',
-         'br-enp4s0',
-         'enp4s0'),
-        ('test_data/full-9002',
-         'enp2s0.617 br-enp4s0',
-         'enp2s0 enp4s0'),
+        ("test_data/override", "eno1", "eno1"),
+        ("test_data/full-9000", "br-enp4s0", "enp4s0"),
+        ("test_data/full-9002", "enp2s0.617 br-enp4s0", "enp2s0 enp4s0"),
     )
     @ddt.unpack
     def test_physical(self, root, query, names):
@@ -180,54 +178,65 @@ class TestCmdNetPlanParser(unittest.TestCase):
         """
         Test "netplan-parser physical".
         """
-        query_split = query.split(' ')
-        (code, output, errs) = run_parser(['-f', 'names', '-r', root,
-                                           'physical'] + query_split)
-        self.assertEqual(errs, '')
+        query_split = query.split(" ")
+        (code, output, errs) = run_parser(
+            ["-f", "names", "-r", root, "physical"] + query_split
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
-        lines = output.split('\n')
+        lines = output.split("\n")
         self.assertEqual(len(lines), 2)
         self.assertEqual(lines[0], names)
-        self.assertEqual(lines[1], '')
+        self.assertEqual(lines[1], "")
 
-        (code, output, errs) = run_parser(['-f', 'yaml', '-r', root,
-                                           'physical'] + query_split)
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(
+            ["-f", "yaml", "-r", root, "physical"] + query_split
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(' '.join(sorted(data.keys())), names)
+        self.assertEqual(" ".join(sorted(data.keys())), names)
 
-        (code, output, errs) = run_parser(['-f', 'json', '-r', root,
-                                           'physical'] + query_split)
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(
+            ["-f", "json", "-r", root, "physical"] + query_split
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = json.loads(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(' '.join(sorted(data.keys())), names)
+        self.assertEqual(" ".join(sorted(data.keys())), names)
 
     def test_exclude(self):
         # type: (TestCmdNetPlanParser) -> None
         """
         Test "netplan-parser -x conffile show".
         """
-        (code, output, errs) = run_parser(['-f', 'yaml',
-                                           '-r', 'test_data/full-9002',
-                                           'show', 'enp2s0'])
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(
+            ["-f", "yaml", "-r", "test_data/full-9002", "show", "enp2s0"]
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(list(data.keys()), ['enp2s0'])
-        self.assertEqual(data['enp2s0'].get('mtu', 1500), 9002)
+        self.assertEqual(list(data.keys()), ["enp2s0"])
+        self.assertEqual(data["enp2s0"].get("mtu", 1500), 9002)
 
-        (code, output, errs) = run_parser(['-f', 'yaml',
-                                           '-r', 'test_data/full-9002',
-                                           '-x', '99-storpool.yaml',
-                                           'show', 'enp2s0'])
-        self.assertEqual(errs, '')
+        (code, output, errs) = run_parser(
+            [
+                "-f",
+                "yaml",
+                "-r",
+                "test_data/full-9002",
+                "-x",
+                "99-storpool.yaml",
+                "show",
+                "enp2s0",
+            ]
+        )
+        self.assertEqual(errs, "")
         self.assertEqual(code, 0)
         data = yaml.safe_load(output)
         self.assertIsInstance(data, dict)
-        self.assertEqual(list(data.keys()), ['enp2s0'])
-        self.assertEqual(data['enp2s0'].get('mtu', 1500), 9000)
+        self.assertEqual(list(data.keys()), ["enp2s0"])
+        self.assertEqual(data["enp2s0"].get("mtu", 1500), 9000)

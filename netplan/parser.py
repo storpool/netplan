@@ -35,6 +35,7 @@ class ParseFileException(Exception):
     """
     An exception raised while parsing a NetPlan config file.
     """
+
     def __init__(self, fname, inner):
         # type: (ParseFileException, str, Exception) -> None
         """
@@ -50,16 +51,18 @@ class ParseFileException(Exception):
         """
         Provide a human-readable error message.
         """
-        return 'Could not parse the {fname} netplan config file: {e}' \
-               .format(fname=self.fname, e=self.inner)
+        return "Could not parse the {fname} netplan config file: {e}".format(
+            fname=self.fname, e=self.inner
+        )
 
     def __repr__(self):
         # type: (ParseFileException) -> str
         """
         Provide a Python-style representation.
         """
-        return 'ParseFileException(fname={fname}, inner={inner})' \
-               .format(fname=repr(self.fname), inner=repr(self.inner))
+        return "ParseFileException(fname={fname}, inner={inner})".format(
+            fname=repr(self.fname), inner=repr(self.inner)
+        )
 
 
 class Parser(object):
@@ -68,15 +71,15 @@ class Parser(object):
     """
 
     # The default list of directories to look in.
-    NETPLAN_DIRS = ('/lib/netplan', '/etc/netplan', '/run/netplan')
+    NETPLAN_DIRS = ("/lib/netplan", "/etc/netplan", "/run/netplan")
 
     # The section names for the various interface classes.
     BY_SECTION = {
-        'bonds': npiface.BondInterface,
-        'bridges': npiface.BridgeInterface,
-        'ethernets': npiface.EthernetInterface,
-        'vlans': npiface.VLANInterface,
-        'wifis': npiface.WirelessInterface,
+        "bonds": npiface.BondInterface,
+        "bridges": npiface.BridgeInterface,
+        "ethernets": npiface.EthernetInterface,
+        "vlans": npiface.VLANInterface,
+        "wifis": npiface.WirelessInterface,
     }
 
     def __init__(self, dirs=NETPLAN_DIRS):
@@ -101,7 +104,7 @@ class Parser(object):
         files = {}
         for dirname in dirs:
             for fname in os.listdir(dirname):
-                if not fname.endswith('.yaml'):
+                if not fname.endswith(".yaml"):
                     continue
                 full = os.path.join(dirname, fname)
                 if not os.path.isfile(full):
@@ -139,30 +142,33 @@ class Parser(object):
         type corresponding to the netplan section that the interface was
         defined in.
         """
+
         def parse_file(fname):
             # type: (str) -> Dict[str, Any]
             """
             Parse a version 2 netplan file and return a dictionary
             containing the data about the interfaces.
             """
-            with open(fname, mode='r') as infile:
+            with open(fname, mode="r") as infile:
                 contents = yaml.safe_load(infile)
             if not isinstance(contents, dict):
-                raise Exception('The contents is not a YAML dictionary')
-            net = contents.get('network')
+                raise Exception("The contents is not a YAML dictionary")
+            net = contents.get("network")
             if net is None:
                 raise Exception('No "network" top-level element')
-            ver = net.get('version')
+            ver = net.get("version")
             if ver is None:
                 raise Exception('No "network/version" element')
             if ver != 2:
-                raise Exception('Unsupported format version {ver}'
-                                .format(ver=ver))
-            del net['version']
+                raise Exception(
+                    "Unsupported format version {ver}".format(ver=ver)
+                )
+            del net["version"]
             missing = sorted(set(net.keys()) - skeys)
             if missing:
-                raise Exception('Unsupported section(s) {ms}'
-                                .format(ms=', '.join(missing)))
+                raise Exception(
+                    "Unsupported section(s) {ms}".format(ms=", ".join(missing))
+                )
             return cast(Dict[str, Any], net)
 
         raw = {}  # type: Dict[str, Any]

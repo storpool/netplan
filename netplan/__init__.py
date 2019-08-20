@@ -51,5 +51,4 @@ from netplan.parser import Parser
 VERSION = NetPlan.VERSION
 
 assert len(Parser.NETPLAN_DIRS) == 3
-assert [d for d in Parser.NETPLAN_DIRS
-        if not d.endswith('/netplan')] == []
+assert [d for d in Parser.NETPLAN_DIRS if not d.endswith("/netplan")] == []

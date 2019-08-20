@@ -28,6 +28,7 @@ class Interface(object):
     """
     A parent class for the netplan interface definitions.
     """
+
     # TODO: add the schema and validate using it.
     def __init__(self, name, section, data):
         # type: (Interface, str, str, Dict[str, Any]) -> None
@@ -37,13 +38,16 @@ class Interface(object):
 
     def __str__(self):
         # type: (Interface) -> str
-        return '{sect}/{name}'.format(sect=self.section, name=self.name)
+        return "{sect}/{name}".format(sect=self.section, name=self.name)
 
     def __repr__(self):
         # type: (Interface) -> str
-        return '{cls}(name={name}, section={sect}, data={data})' \
-               .format(cls=type(self).__name__, name=repr(self.name),
-                       sect=repr(self.section), data=repr(self.data))
+        return "{cls}(name={name}, section={sect}, data={data})".format(
+            cls=type(self).__name__,
+            name=repr(self.name),
+            sect=repr(self.section),
+            data=repr(self.data),
+        )
 
     def get(self, name, default=None):
         # type: (Interface, str, Optional[Any]) -> Any
@@ -65,8 +69,11 @@ class Interface(object):
         Return the names of any parent interfaces that should be
         examined in addition to this one.
         """
-        raise Exception('{cls}.get_parent_names() must be overridden'
-                        .format(cls=type(self).__name__))
+        raise Exception(
+            "{cls}.get_parent_names() must be overridden".format(
+                cls=type(self).__name__
+            )
+        )
 
 
 class PhysicalInterface(Interface):
@@ -80,6 +87,7 @@ class EthernetInterface(PhysicalInterface):
     """
     A netplan definition for an Ethernet interface.
     """
+
     # TODO: add the additional schema fields.
     def get_parent_names(self):
         # type: (EthernetInterface) -> List[str]
@@ -95,6 +103,7 @@ class WirelessInterface(PhysicalInterface):
     """
     A netplan definition for a wireless interface.
     """
+
     # TODO: add the additional schema fields.
     def get_parent_names(self):
         # type: (WirelessInterface) -> List[str]
@@ -110,6 +119,7 @@ class BondInterface(Interface):
     """
     A netplan definition for a bond interface.
     """
+
     # TODO: add the additional schema fields.
     def get_parent_names(self):
         # type: (BondInterface) -> List[str]
@@ -118,13 +128,14 @@ class BondInterface(Interface):
         examined in addition to this one.
         For a bond interface, this is the list of the members.
         """
-        return cast(List[str], self.get('interfaces', []))
+        return cast(List[str], self.get("interfaces", []))
 
 
 class BridgeInterface(Interface):
     """
     A netplan definition for a bridge interface.
     """
+
     # TODO: add the additional schema fields.
     def get_parent_names(self):
         # type: (BridgeInterface) -> List[str]
@@ -133,13 +144,14 @@ class BridgeInterface(Interface):
         examined in addition to this one.
         For a bridge interface, this is the list of the members.
         """
-        return cast(List[str], self.get('interfaces', []))
+        return cast(List[str], self.get("interfaces", []))
 
 
 class VLANInterface(Interface):
     """
     A netplan definition for a VLAN interface.
     """
+
     # TODO: add the additional schema fields.
     def get_parent_names(self):
         # type: (VLANInterface) -> List[str]
@@ -149,5 +161,5 @@ class VLANInterface(Interface):
         For a VLAN interface, this is the link-level interface that
         the VLAN is on.
         """
-        link = self.get('link')
+        link = self.get("link")
         return [link] if link is not None else []
