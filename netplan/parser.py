@@ -164,7 +164,8 @@ class Parser(object):
                     "Unsupported format version {ver}".format(ver=ver)
                 )
             del net["version"]
-            del net["renderer"]
+            if net.get("renderer", -1) != -1:
+                del net["renderer"]
             missing = sorted(set(net.keys()) - skeys)
             if missing:
                 raise Exception(
