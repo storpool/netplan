@@ -11,6 +11,7 @@ the "netplan.config.NetPlan" class (also exported as "netplan.NetPlan").
 ## Example usage
 
     import netplan
+    import yaml
 
     p = netplan.Parser()
     data = p.parse()
