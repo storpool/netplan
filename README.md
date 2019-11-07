@@ -11,11 +11,12 @@ the "netplan.config.NetPlan" class (also exported as "netplan.NetPlan").
 ## Example usage
 
     import netplan
+    import yaml
 
     p = netplan.Parser()
     data = p.parse()
     for iface, cfg in data.items():
-        print('{section}/{name}'.format(section=cfg.section, name=iface)
+        print('{section}/{name}'.format(section=cfg.section, name=iface))
 
     p = netplan.Parser()
     data = p.parse(exclude=['set-mtu.yaml'])
