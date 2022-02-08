@@ -38,11 +38,11 @@ class Interface(object):
 
     def __str__(self):
         # type: (Interface) -> str
-        return "{sect}/{name}".format(sect=self.section, name=self.name)
+        return f"{self.section}/{self.name}"
 
     def __repr__(self):
         # type: (Interface) -> str
-        return "{cls}(name={name}, section={sect}, data={data})".format(
+        return "{cls}(name={name}, section={sect}, data={data})".format(  # pylint: disable=C0209
             cls=type(self).__name__,
             name=repr(self.name),
             sect=repr(self.section),
@@ -63,17 +63,13 @@ class Interface(object):
         """
         self.data[name] = value
 
-    def get_parent_names(self):
+    def get_parent_names(self):  # pylint: disable=R0201
         # type: (Interface) -> List[str]
         """
         Return the names of any parent interfaces that should be
         examined in addition to this one.
         """
-        raise Exception(
-            "{cls}.get_parent_names() must be overridden".format(
-                cls=type(self).__name__
-            )
-        )
+        raise Exception(f"{type(self).__name__}.get_parent_names() must be overridden")
 
 
 class PhysicalInterface(Interface):

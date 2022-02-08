@@ -33,7 +33,7 @@ RE_VERSION = r"""^
 
 def get_version():
     # type: () -> str
-    """ Get the version string from the module's __init__ file. """
+    """Get the version string from the module's __init__ file."""
     found = None
     re_semver = re.compile(RE_VERSION, re.X)
     with open("netplan/config.py") as init:

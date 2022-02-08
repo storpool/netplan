@@ -39,23 +39,19 @@ def run_parser(args):
     Run the netplan-parser utility with the specified command-line
     arguments and return its exit code and output.
     """
-    env = {k: v for (k, v) in os.environ.items()}
+    env = dict(os.environ.items())
     env["PYTHONPATH"] = ":".join(sys.path)
     cmd = [sys.executable, "--", "bin/netplan-parser"] + args
-    proc = subprocess.Popen(
-        cmd,
-        env=env,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    out = proc.communicate()
-    res = proc.wait()
-    return (
-        res,
-        out[0].decode(encoding="US-ASCII"),
-        out[1].decode(encoding="utf-8"),
-    )
+    with subprocess.Popen(
+        cmd, env=env, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    ) as proc:
+        out = proc.communicate()
+        res = proc.wait()
+        return (
+            res,
+            out[0].decode(encoding="US-ASCII"),
+            out[1].decode(encoding="utf-8"),
+        )
 
 
 @ddt.ddt
@@ -88,14 +84,8 @@ class TestCmdNetPlanParser(unittest.TestCase):
 
     @ddt.data(
         ("test_data/override", "eno1"),
-        (
-            "test_data/full-9000",
-            "br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0",
-        ),
-        (
-            "test_data/full-9002",
-            "br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0",
-        ),
+        ("test_data/full-9000", "br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0"),
+        ("test_data/full-9002", "br-enp4s0 eno1 enp2s0 enp2s0.617 enp2s0d1 enp4s0"),
     )
     @ddt.unpack
     def test_show(self, root, names):
@@ -128,11 +118,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
     @ddt.data(
         ("test_data/override", "eno1", "eno1"),
         ("test_data/full-9000", "br-enp4s0", "br-enp4s0 enp4s0"),
-        (
-            "test_data/full-9002",
-            "enp2s0.617 br-enp4s0",
-            "br-enp4s0 enp2s0 enp2s0.617 enp4s0",
-        ),
+        ("test_data/full-9002", "enp2s0.617 br-enp4s0", "br-enp4s0 enp2s0 enp2s0.617 enp4s0"),
     )
     @ddt.unpack
     def test_related(self, root, query, names):
@@ -141,9 +127,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
         Test "netplan-parser related".
         """
         query_split = query.split(" ")
-        (code, output, errs) = run_parser(
-            ["-f", "names", "-r", root, "related"] + query_split
-        )
+        (code, output, errs) = run_parser(["-f", "names", "-r", root, "related"] + query_split)
         assert errs == ""
         assert code == 0
         lines = output.split("\n")
@@ -151,18 +135,14 @@ class TestCmdNetPlanParser(unittest.TestCase):
         assert lines[0] == names
         assert lines[1] == ""
 
-        (code, output, errs) = run_parser(
-            ["-f", "yaml", "-r", root, "related"] + query_split
-        )
+        (code, output, errs) = run_parser(["-f", "yaml", "-r", root, "related"] + query_split)
         assert errs == ""
         assert code == 0
         data = yaml.safe_load(output)
         assert isinstance(data, dict)
         assert " ".join(sorted(data.keys())) == names
 
-        (code, output, errs) = run_parser(
-            ["-f", "json", "-r", root, "related"] + query_split
-        )
+        (code, output, errs) = run_parser(["-f", "json", "-r", root, "related"] + query_split)
         assert errs == ""
         assert code == 0
         data = json.loads(output)
@@ -181,9 +161,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
         Test "netplan-parser physical".
         """
         query_split = query.split(" ")
-        (code, output, errs) = run_parser(
-            ["-f", "names", "-r", root, "physical"] + query_split
-        )
+        (code, output, errs) = run_parser(["-f", "names", "-r", root, "physical"] + query_split)
         assert errs == ""
         assert code == 0
         lines = output.split("\n")
@@ -191,18 +169,14 @@ class TestCmdNetPlanParser(unittest.TestCase):
         assert lines[0] == names
         assert lines[1] == ""
 
-        (code, output, errs) = run_parser(
-            ["-f", "yaml", "-r", root, "physical"] + query_split
-        )
+        (code, output, errs) = run_parser(["-f", "yaml", "-r", root, "physical"] + query_split)
         assert errs == ""
         assert code == 0
         data = yaml.safe_load(output)
         assert isinstance(data, dict)
         assert " ".join(sorted(data.keys())) == names
 
-        (code, output, errs) = run_parser(
-            ["-f", "json", "-r", root, "physical"] + query_split
-        )
+        (code, output, errs) = run_parser(["-f", "json", "-r", root, "physical"] + query_split)
         assert errs == ""
         assert code == 0
         data = json.loads(output)
@@ -225,16 +199,7 @@ class TestCmdNetPlanParser(unittest.TestCase):
         assert data["enp2s0"].get("mtu", 1500) == 9002
 
         (code, output, errs) = run_parser(
-            [
-                "-f",
-                "yaml",
-                "-r",
-                "test_data/full-9002",
-                "-x",
-                "99-storpool.yaml",
-                "show",
-                "enp2s0",
-            ]
+            ["-f", "yaml", "-r", "test_data/full-9002", "-x", "99-storpool.yaml", "show", "enp2s0"]
         )
         assert errs == ""
         assert code == 0
