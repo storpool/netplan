@@ -44,11 +44,7 @@ class TestParserCombine(unittest.TestCase):
         ({"a": 1, "b": "c"}, {"a": 2}, {"a": 2, "b": "c"}),
         ({"a": [1]}, {}, {"a": [1]}),
         ({"a": [1]}, {"a": [2]}, {"a": [1, 2]}),
-        (
-            {"a": {"b": ["c"]}},
-            {"a": {"b": [0], "e": 17}},
-            {"a": {"b": ["c", 0], "e": 17}},
-        ),
+        ({"a": {"b": ["c"]}}, {"a": {"b": [0], "e": 17}}, {"a": {"b": ["c", 0], "e": 17}}),
         (
             {"a": 1, "b": {"c": [2], "d": "3"}},
             {"a": 42, "b": {"c": [4], "e": 5}, "f": 6.0},
@@ -185,10 +181,7 @@ class TestParser(unittest.TestCase):
         _combine_dict() and "exclude" should work together to
         parse some real-life data files.
         """
-        dirs = [
-            "test_data/{sub}/{d}/netplan".format(sub=subdir, d=d)
-            for d in ("lib", "etc", "run")
-        ]
+        dirs = [f"test_data/{subdir}/{d}/netplan" for d in ("lib", "etc", "run")]
         parser = npparser.Parser(dirs=dirs)
         if exclude is None:
             data = parser.parse()
@@ -200,18 +193,8 @@ class TestParser(unittest.TestCase):
     @ddt.data(
         ("override", ["eno1"], "ethernets: eno1", "ethernets: eno1"),
         ("full-9000", ["eno1"], "ethernets: eno1", "ethernets: eno1"),
-        (
-            "full-9000",
-            ["enp2s0.617"],
-            "ethernets: enp2s0; vlans: enp2s0.617",
-            "ethernets: enp2s0",
-        ),
-        (
-            "full-9000",
-            ["br-enp4s0"],
-            "bridges: br-enp4s0; ethernets: enp4s0",
-            "ethernets: enp4s0",
-        ),
+        ("full-9000", ["enp2s0.617"], "ethernets: enp2s0; vlans: enp2s0.617", "ethernets: enp2s0"),
+        ("full-9000", ["br-enp4s0"], "bridges: br-enp4s0; ethernets: enp4s0", "ethernets: enp4s0"),
         (
             "full-9000",
             ["br-enp4s0", "enp2s0.617"],
@@ -231,10 +214,7 @@ class TestParser(unittest.TestCase):
         get_all_interfaces() should return all the related interfaces, and
         get_physical_interfaces() should only return physical interfaces.
         """
-        dirs = [
-            "test_data/{sub}/{d}/netplan".format(sub=subdir, d=d)
-            for d in ("lib", "etc", "run")
-        ]
+        dirs = [f"test_data/{subdir}/{d}/netplan" for d in ("lib", "etc", "run")]
         parser = npparser.Parser(dirs=dirs)
         data = parser.parse()
         assert set(ifaces).issubset(set(data.data.keys()))

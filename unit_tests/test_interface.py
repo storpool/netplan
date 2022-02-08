@@ -60,7 +60,7 @@ class TestInterfaces(unittest.TestCase):
         assert str(obj) == "section/iface"
         got = repr(obj)
         exp = (
-            "{name}(name='iface', section='section', "
+            "{name}(name='iface', section='section', "  # pylint: disable=C0209
             "data={{'mtu': 1500}})".format(name=cls.__name__)
         )
         assert got == exp
@@ -104,7 +104,5 @@ class TestInterfaces(unittest.TestCase):
         """
         Test querying an interface for its parent.
         """
-        obj = cls(
-            "iface", "section", {"interfaces": ["i1", "i2"], "link": "lnk"}
-        )
+        obj = cls("iface", "section", {"interfaces": ["i1", "i2"], "link": "lnk"})
         assert obj.get_parent_names() == parents

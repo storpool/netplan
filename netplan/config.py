@@ -17,7 +17,7 @@
 Convenience classes for the fully-parsed netplan configuration.
 """
 
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Any
 
 from . import interface as npiface
 
@@ -34,16 +34,16 @@ class NetPlan(object):
     VERSION = "0.3.3"
 
     def __init__(self, data):
-        # type: (NetPlan, Dict[str, npiface.Interface]) -> None
-        self.version = 0
+        # type: (NetPlan, Dict[str, Any]) -> None
+        self.version: int = 0
         if "version" in data.keys():
             self.version = data["version"]
             del data["version"]
-        self.renderer = ""
+        self.renderer: str = ""
         if "renderer" in data.keys():
             self.renderer = data["renderer"]
             del data["renderer"]
-        self.data = data
+        self.data: Dict[str, npiface.Interface] = data
 
     def __str__(self):
         # type: (NetPlan) -> str
@@ -59,10 +59,7 @@ class NetPlan(object):
 
         # Sort the interface names within each section
         collected = [
-            "{sect}: {ifaces}".format(
-                sect=section, ifaces=", ".join(sorted(data))
-            )
-            for (section, data) in by_section.items()
+            f'{section}: {", ".join(sorted(data))}' for (section, data) in by_section.items()
         ]
 
         # Return a list sorted by section name
@@ -73,16 +70,22 @@ class NetPlan(object):
         """
         Provide a Python-style representation.
         """
-        return "NetPlan({d})".format(d=repr(self.data))
+        return f"NetPlan({repr(self.data)})"
 
     def get_net_version(self):
-        # type: (NetPlan) -> Dict
+        # type: (NetPlan) -> Dict[str, int]
+        """
+        Return the NetPlan YAML version.
+        """
         if self.version != 0:
             return {"version": self.version}
         return {}
 
     def get_net_renderer(self):
-        # type: (NetPlan) -> Dict
+        # type: (NetPlan) -> Dict[str, str]
+        """
+        Return the NetPlan renderer.
+        """
         if self.version:
             return {"renderer": self.renderer}
         return {}
@@ -99,9 +102,7 @@ class NetPlan(object):
             cur = cur.union(new)
             newnew = set()  # type: Set[str]
             for iface in new:
-                newnew = newnew.union(
-                    set(self.data[iface].get_parent_names()) - cur
-                )
+                newnew = newnew.union(set(self.data[iface].get_parent_names()) - cur)
             new = newnew
         return NetPlan({iface: self.data[iface] for iface in cur})
 
@@ -115,9 +116,5 @@ class NetPlan(object):
         wireless interface this function would return its own configuration.
         """
         related = self.get_all_interfaces(ifaces)
-        phys = [
-            d
-            for d in related.data.values()
-            if isinstance(d, npiface.PhysicalInterface)
-        ]
+        phys = [d for d in related.data.values() if isinstance(d, npiface.PhysicalInterface)]
         return NetPlan({d.name: d for d in phys})

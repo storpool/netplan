@@ -42,7 +42,7 @@ class ParseFileException(Exception):
         Initialize a ParseFileException object with
         the specified filename and inner exception.
         """
-        super(ParseFileException, self).__init__()
+        super().__init__()
         self.fname = fname
         self.inner = inner
 
@@ -51,18 +51,14 @@ class ParseFileException(Exception):
         """
         Provide a human-readable error message.
         """
-        return "Could not parse the {fname} netplan config file: {e}".format(
-            fname=self.fname, e=self.inner
-        )
+        return f"Could not parse the {self.fname} netplan config file: {self.inner}"
 
     def __repr__(self):
         # type: (ParseFileException) -> str
         """
         Provide a Python-style representation.
         """
-        return "ParseFileException(fname={fname}, inner={inner})".format(
-            fname=repr(self.fname), inner=repr(self.inner)
-        )
+        return f"ParseFileException(fname={repr(self.fname)}, inner={repr(self.inner)})"
 
 
 class Parser(object):
@@ -151,7 +147,7 @@ class Parser(object):
             Parse a version 2 netplan file and return a dictionary
             containing the data about the interfaces.
             """
-            with open(fname, mode="r") as infile:
+            with open(fname, mode="r", encoding="utf-8") as infile:
                 contents = yaml.safe_load(infile)
             if not isinstance(contents, dict):
                 raise Exception("The contents is not a YAML dictionary")
@@ -162,14 +158,10 @@ class Parser(object):
             if ver is None:
                 raise Exception('No "network/version" element')
             if ver != 2:
-                raise Exception(
-                    "Unsupported format version {ver}".format(ver=ver)
-                )
+                raise Exception(f"Unsupported format version {ver}")
             missing = sorted(set(net.keys()) - skeys.union(self.BY_ATTR))
             if missing:
-                raise Exception(
-                    "Unsupported section(s) {ms}".format(ms=", ".join(missing))
-                )
+                raise Exception(f'Unsupported section(s) {", ".join(missing)}')
             return cast(Dict[str, Any], net)
 
         raw = {}  # type: Dict[str, Any]
@@ -178,7 +170,7 @@ class Parser(object):
             try:
                 self._combine_dicts(raw, parse_file(fname))
             except Exception as exc:
-                raise ParseFileException(fname=fname, inner=exc)
+                raise ParseFileException(fname=fname, inner=exc) from exc
 
         data = {}
         for section, ifaces in raw.items():
