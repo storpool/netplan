@@ -35,6 +35,14 @@ class NetPlan(object):
 
     def __init__(self, data):
         # type: (NetPlan, Dict[str, npiface.Interface]) -> None
+        self.version = 0
+        if "version" in data.keys():
+            self.version = data["version"]
+            del data["version"]
+        self.renderer = ""
+        if "renderer" in data.keys():
+            self.renderer = data["renderer"]
+            del data["renderer"]
         self.data = data
 
     def __str__(self):
@@ -66,6 +74,18 @@ class NetPlan(object):
         Provide a Python-style representation.
         """
         return "NetPlan({d})".format(d=repr(self.data))
+
+    def get_net_version(self):
+        # type: (NetPlan) -> Dict
+        if self.version != 0:
+            return {"version": self.version}
+        return {}
+
+    def get_net_renderer(self):
+        # type: (NetPlan) -> Dict
+        if self.version:
+            return {"renderer": self.renderer}
+        return {}
 
     def get_all_interfaces(self, ifaces):
         # type: (NetPlan, List[str]) -> NetPlan

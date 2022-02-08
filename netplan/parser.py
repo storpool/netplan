@@ -82,6 +82,8 @@ class Parser(object):
         "wifis": npiface.WirelessInterface,
     }
 
+    BY_ATTR = ["version", "renderer"]
+
     def __init__(self, dirs=NETPLAN_DIRS):
         # type: (Parser, Iterable[str]) -> None
         """
@@ -163,8 +165,7 @@ class Parser(object):
                 raise Exception(
                     "Unsupported format version {ver}".format(ver=ver)
                 )
-            del net["version"]
-            missing = sorted(set(net.keys()) - skeys)
+            missing = sorted(set(net.keys()) - skeys.union(self.BY_ATTR))
             if missing:
                 raise Exception(
                     "Unsupported section(s) {ms}".format(ms=", ".join(missing))
@@ -181,6 +182,9 @@ class Parser(object):
 
         data = {}
         for section, ifaces in raw.items():
+            if section in self.BY_ATTR:
+                data[section] = ifaces
+                continue
             cls = self.BY_SECTION[section]
             for iface, idef in ifaces.items():
                 data[iface] = cls(iface, section, idef)
