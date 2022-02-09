@@ -1,0 +1,2 @@
+version=4
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/python-netplan-$1\.tar\.gz/ https://github.com/algolia/python-netplan/tags .*/v?(\d\S*)\.tar\.gz
