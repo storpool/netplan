@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright (c) 2018  StorPool.
 # All rights reserved.
@@ -117,7 +117,7 @@ def cmd_related(args):
 
 def cmd_physical(args):
     """
-    Gather the configuartion of the specified interfaces and all other
+    Gather the configuration of the specified interfaces and all other
     interfaces related to them, e.g. raw devices for VLANs, members for
     bridge and bond interfaces, etc; then show the configuration for
     the physical interfaces only.
