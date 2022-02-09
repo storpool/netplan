@@ -1,0 +1,65 @@
+python-netplan (0.4.1-algolia1) unstable; urgency=low
+
+  * Fix tests and run it
+
+ -- Jeremy Jacque <jeremy.jacque@algolia.com>  Tue, 08 Feb 2022 23:30:00 +0100
+
+python-netplan (0.3.3-algolia1) unstable; urgency=low
+
+  * Initial packaging
+
+ -- Amandine Nassiri <amandine.nassiri@algolia.com>  Tue, 08 Feb 2022 11:30:00 +0100
+
+python-netplan (0.3.0-1~0+sp1ubuntu1~18.04.1) bionic; urgency=medium
+
+  * Rebuild for Ubuntu 18.04 (Bionic Beaver).
+  * Switch back to debian/compat.
+
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 15:12:43 +0200
+
+python-netplan (0.3.0-1~0+sp1ubuntu1~18.10.1) cosmic; urgency=medium
+
+  * Rebuild for Ubuntu 18.10 (Cosmic Cuttlefish).
+  * Downgrade the debhelper compatibility level to 11 with no changes.
+
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 15:03:30 +0200
+
+python-netplan (0.3.0-1~0+sp1ubuntu1) disco; urgency=medium
+
+  * Rebuild for Ubuntu 19.04 (Disco Dingo).
+
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:56:14 +0200
+
+python-netplan (0.3.0-1~0+sp1) unstable; urgency=medium
+
+  * Rename the Debian packaging branch to debian/master in
+    accordance with DEP 14.
+  * Minimize the upstream signing key, only keep the pp@storpool.com UID.
+  * Add a watch file.
+  * Drop the debhelper-compat Lintian overrides; Lintian 2.5.98
+    no longer issues these errors and warnings.
+  * Make full use of debhelper's support for pybuild.
+  * Bring up to compliance with Debian Policy 4.3.0: install CHANGES.md
+    as NEWS.
+  * Use all the python:* and python3:* substvars.
+  * Switch the netplan-parser package to Python 3.x.
+  * Bump the debhelper compatibility level to 12 with no changes.
+  * Add a trivial git-buildpackage config file.
+  * Add the year 2019 to StorPool's debian/* copyright notice.
+  * Add the typos patch to correct a typographical error.
+  * Add a simple adequate autopkgtest.
+  * New upstream release.
+
+ -- Peter Pentchev <pp@storpool.com>  Thu, 31 Jan 2019 14:54:15 +0200
+
+python-netplan (0.2.0-1~0+sp1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Peter Pentchev <pp@storpool.com>  Tue, 31 Jul 2018 16:37:24 +0300
+
+python-netplan (0.1.0-1~0+sp1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Peter Pentchev <pp@storpool.com>  Tue, 31 Jul 2018 15:20:24 +0300

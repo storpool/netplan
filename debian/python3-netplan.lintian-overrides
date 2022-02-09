@@ -1,0 +1,4 @@
+# It's just a helper tool
+python3-netplan: library-package-name-for-application usr/bin/netplan
+# It's just a helper tool
+python3-netplan: application-in-library-section python usr/bin/netplan

@@ -1,0 +1,46 @@
+Source: python-netplan
+Maintainer: Amandine Nassiri <amandine.nassiri@algolia.com>
+Section: python
+Priority: optional
+Build-Depends: dh-python,
+	python3-all,
+	python3-yaml,
+	python3-setuptools,
+	tox,
+	black
+Standards-Version: 4.4.1
+Homepage: https://github.com/algolia/python-netplan
+Rules-Requires-Root: no
+
+Package: python3-netplan
+Architecture: all
+Provides:
+	${python3:Provides},
+Depends: python3-yaml,
+	${misc:Depends},
+	${python3:Depends}
+Description: Python 3.x library for parsing the netplan configuration data
+ This module parses the YAML configuration files describing the system's
+ network configuration in the format used by the netplan.io package.
+ The main parser is the `netplan.parser.Parser` class (also exported as
+ `netplan.Parser`); its `parse()` method returns a data structure of
+ the `netplan.config.NetPlan` class (also exported as `netplan.NetPlan`).
+ .
+ This package provides the Python 3.x library.
+
+Package: netplan-parser
+Section: utils
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ python3-netplan (= ${binary:Version}),
+ python3-yaml
+Description: command-line tool for parsing the netplan configuration data
+ This module parses the YAML configuration files describing the system's
+ network configuration in the format used by the netplan.io package.
+ The main parser is the `netplan.parser.Parser` class (also exported as
+ `netplan.Parser`); its `parse()` method returns a data structure of
+ the `netplan.config.NetPlan` class (also exported as `netplan.NetPlan`).
+ .
+ This package provides the `netplan-parser` command-line utility.
