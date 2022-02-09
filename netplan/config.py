@@ -31,7 +31,7 @@ class NetPlan(object):
     interface names to netplan.interface.* classes.
     """
 
-    VERSION = "0.3.3"
+    VERSION = "0.4.1"
 
     def __init__(self, data):
         # type: (NetPlan, Dict[str, Any]) -> None
